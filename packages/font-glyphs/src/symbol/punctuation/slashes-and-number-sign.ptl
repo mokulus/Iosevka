@@ -31,8 +31,9 @@ glyph-block Symbol-Punctuation-Slashes-And-Number-Sign : begin
 			corner (l + w * cor) b
 			corner (l - w * cor) b
 
+	# Berkeley Mono: slashes set higher.
 	create-glyph 'slash' '/' : glyph-proc
-		include : SlashShape slashDefautLeft slashDefaultRight
+		include : SlashShape slashDefautLeft slashDefaultRight (ParenTop + 42) (ParenBot + 42)
 
 	alias 'solidus'      0x2044 'slash'
 	alias 'fractionBar'  null   'slash'
@@ -74,7 +75,7 @@ glyph-block Symbol-Punctuation-Slashes-And-Number-Sign : begin
 			corner (r - w * cor) b
 
 	create-glyph 'backslash' "\\" : glyph-proc
-		include : BackslashShape slashDefautLeft slashDefaultRight
+		include : BackslashShape slashDefautLeft slashDefaultRight (ParenTop + 42) (ParenBot + 42)
 
 	alias 'mathSetMinus'  0x2216 'backslash'
 	alias 'mathBackslash' 0x29F5 'backslash'
