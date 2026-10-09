@@ -75,7 +75,8 @@ glyph-block Symbol-Math-Relation-Equal : begin
 		VBar.m x (SymbolMid - IdentHalfSpace) (SymbolMid + IdentHalfSpace) EqualHoleWidth
 
 	create-glyph 'equal' '=' : glyph-proc
-		include : EqualShape SB RightSB
+		# Berkeley Mono: bars reach past the side bearings.
+		include : EqualShape (SB - 18) (RightSB + 18)
 
 	define EqDotDistance : EqualHalfSpace * 2 + DotRadius * OperatorStroke / Stroke
 
