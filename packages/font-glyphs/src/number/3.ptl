@@ -39,6 +39,11 @@ glyph-block Digits-Three : begin
 	create-glyph 'three.lnum.flatTopSerifless' : glyph-proc
 		include : MarkSet.capital
 		include : EzhShape [DivFrame 1] CAP 0 (pxMidLeft -- 0.25) (pxTopRight -- 0.975) (fSerifed -- false)
+		# Berkeley Mono: width and position.
+		include : Translate (-Middle) 0
+		include : Scale 0.95 1
+		include : Translate (Middle + (-16.0)) 0
+
 	create-glyph 'three.lnum.flatTopSerifed' : glyph-proc
 		include : MarkSet.capital
 		include : EzhShape [DivFrame 1] CAP 0 (pxMidLeft -- 0.25) (pxTopRight -- 0.975) (fSerifed -- true)
