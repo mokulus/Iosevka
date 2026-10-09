@@ -58,9 +58,10 @@ glyph-block Symbol-Punctuation-Ellipsis : begin
 			# Normal density: full MosaicWidth, dots at 1/6–5/6
 			create-glyph "\[MangleName 'ellipsis'].\(dotSuffix).normal" : glyph-proc
 				set-width MosaicWidth
-				local radius : [EllipsisDotRadius 3 MosaicWidth] * kDotRadius
-				local left  : mix 0 MosaicWidth (1 / 6)
-				local right : mix 0 MosaicWidth (5 / 6)
+				# Berkeley Mono: larger dots spread across the whole cell.
+				local radius : [EllipsisDotRadius 3 MosaicWidth] * kDotRadius * 1.08
+				local left  : mix 0 MosaicWidth (1 / 10)
+				local right : mix 0 MosaicWidth (9 / 10)
 				include : VThreeDotsShape DrawAt radius overshoot left right (+1) 0 (2 * radius)
 				create-forked-glyph "\[MangleName 'mathCDots'].\(dotSuffix).normal"
 					ApparentTranslate 0 (SymbolMid - radius)
