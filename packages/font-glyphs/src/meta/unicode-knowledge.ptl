@@ -74,7 +74,6 @@ export : define decompOverrides : object
 	0x2D9  { 'markBaseSpace' 'dotAbove' }
 	0x2DA  { 'markBaseSpace' 'ringAbove' }
 	0x2DB  { 'markBaseSpace' 'ogonekBelow' }
-	0x2DC  { 'markBaseSpace' 'tildeAbove' }
 	0x2DD  { 'markBaseSpace' 'doubleAcuteAbove' }
 	0x2DF  { 'markBaseSpace' 'crossAbove' }
 	0x2EC  { 'markBaseSpace' 'caronBelow' }

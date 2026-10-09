@@ -38,6 +38,8 @@ glyph-block Symbol-Punctuation-Ascii-Marks : begin
 
 	select-variant 'asciiTilde' '~'
 	select-variant 'asciiCaret' '^'
+	# Berkeley Mono draws U+02DC SMALL TILDE with the same glyph as '~'.
+	alias 'smallTilde' 0x2DC 'asciiTilde'
 
 	create-glyph 'ringTilde' 0x2E1B : glyph-proc
 		include : refer-glyph 'asciiTilde/sMid'
