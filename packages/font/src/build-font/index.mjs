@@ -1,6 +1,9 @@
+import fs from "node:fs";
+
 import { buildGlyphs } from "@iosevka/font-glyphs";
 import { copyFontMetrics } from "@iosevka/font-glyphs/aesthetics";
 import { buildOtl } from "@iosevka/font-otl";
+import { RecursiveBuildFilter } from "@iosevka/glyph/block";
 import { createGrDisplaySheet } from "@iosevka/glyph/relation";
 import { createSubsetFilter } from "@iosevka/param";
 import { TaskYield } from "@iosevka/util";
@@ -14,18 +17,19 @@ import { postProcessFont } from "../post-processing/index.mjs";
 import { generateTtfaControls } from "../ttfa-controls/index.mjs";
 import { validateFontConfigMono } from "../validate/metrics.mjs";
 
-export async function buildFont(para, cache) {
+export async function buildFont(para, cache, scope) {
 	const baseFont = CreateEmptyFont(para);
 	assignFontNames(baseFont, para.naming, para.isQuasiProportional);
 	await TaskYield();
 
 	// Build glyphs
-	let { glyphStore, fontMetrics } = buildGlyphs(para);
+	let { glyphStore, fontMetrics } = scope ? buildScopedGlyphs(para, scope) : buildGlyphs(para);
 	copyFontMetrics(fontMetrics, baseFont);
 	await TaskYield();
 
-	// Build OTL
-	const otl = buildOtl(para, glyphStore);
+
+	// Build OTL. Scoped builds only serve outline comparison and carry no OpenType features.
+	const otl = scope ? emptyOtl() : buildOtl(para, glyphStore);
 	await TaskYield();
 
 	// Regulate (like geometry conversion)
@@ -66,4 +70,51 @@ function getCharMap(glyphStore) {
 		]);
 	}
 	return charMap;
+}
+
+// Scoped build: run only the glyph blocks the target code points depend on.
+// The dependency closure comes from a previous full run and is stored at scope.path,
+// tagged with scope.key (a hash of the glyph code and variant selection). A stale or
+// missing closure, or a scoped run that fails to produce every target, falls back to
+// a full run, which records a fresh closure.
+function buildScopedGlyphs(para, scope) {
+	const saved = readScope(scope);
+	if (saved) {
+		const filter = new RecursiveBuildFilter(new Set(saved.glyphs), new Set(saved.blocks));
+		try {
+			const result = buildGlyphs(para, filter);
+			if (scope.codepoints.every(u => result.glyphStore.queryByUnicode(u))) return result;
+			console.error("Scoped build missed target glyphs; rebuilding the dependency closure.");
+		} catch (e) {
+			console.error(`Scoped build failed (${e.message}); rebuilding the dependency closure.`);
+		}
+	}
+
+	const result = buildGlyphs(para);
+	const targets = scope.codepoints.map(u => result.glyphStore.queryByUnicode(u)).filter(g => g);
+	const filter = targets[0]._m_dependencyManager.traverseDependencies(targets);
+	fs.writeFileSync(
+		scope.path,
+		JSON.stringify({
+			key: scope.key,
+			glyphs: [...filter.glyphIdFilter],
+			blocks: [...filter.blockIdFilter],
+		}),
+	);
+	return result;
+}
+
+function readScope(scope) {
+	if (!fs.existsSync(scope.path)) return null;
+	const saved = JSON.parse(fs.readFileSync(scope.path, "utf-8"));
+	return saved.key === scope.key ? saved : null;
+}
+
+function emptyOtl() {
+	const table = () => ({ languages: {}, features: {}, lookups: {}, lookupDep: [], lookupOrder: [] });
+	return {
+		GSUB: table(),
+		GPOS: table(),
+		GDEF: { glyphClassDef: {}, markAttachClassDef: {}, markGlyphSets: [] },
+	};
 }

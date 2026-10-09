@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import * as FS from "node:fs";
 import * as Path from "node:path";
 
@@ -547,28 +547,35 @@ const DistUnhintedTTF = file.make(
 	},
 );
 
-// Iteration build without derived glyphs (math styles, enclosures, superscripts).
-// Not for release: the glyph set is incomplete.
-const DistFastTTF = file.make(
-	(gr, fn) => `${DIST}/${gr}/TTF-Fast/${fn}.ttf`,
+// Iteration build for outline comparison: only printable ASCII and the glyphs it depends
+// on, no derived glyphs and no OpenType features. Not for release.
+const SCOPED_CODEPOINTS = Array.from({ length: 0x7f - 0x20 }, (_, i) => 0x20 + i);
+const DistScopedTTF = file.make(
+	(gr, fn) => `${DIST}/${gr}/TTF-Scoped/${fn}.ttf`,
 	async (target, out, gr, fn) => {
 		await target.need(Scripts, Parameters, Dependencies, de(out.dir));
 		const [fi] = await target.need(FontInfoOf(fn));
-		if (fi.spacingDerive) fail(`Fast builds need an ab-initio plan; '${fn}' derives its spacing.`);
+		if (fi.spacingDerive) fail(`Scoped builds need an ab-initio plan; '${fn}' derives its spacing.`);
 
 		const cacheFileName =
 			`${Math.round(1000 * fi.shape.weight)}-${Math.round(1000 * fi.shape.width)}-` +
 			`${Math.round(3600 * fi.shape.slopeAngle)}-${fi.shape.serifs}`;
 		const cachePath = `${SHARED_CACHE}/${cacheFileName}.mpz`;
-		const cacheDiffPath = `${BUILD}/TTF-Fast/${gr}/${fn}.cache.mpz`;
-		await target.need(de(`${BUILD}/TTF-Fast/${gr}`), de(SHARED_CACHE));
+		const workDir = `${BUILD}/TTF-Scoped/${gr}`;
+		const cacheDiffPath = `${workDir}/${fn}.cache.mpz`;
+		await target.need(de(workDir), de(SHARED_CACHE));
 
-		echo.action(echo.hl.command(`Create fast TTF`), out.full);
+		echo.action(echo.hl.command(`Create scoped TTF`), out.full);
 		const { cacheUpdated } = await silently.node("packages/font/src/index.mjs", {
 			...fi,
 			paramsDir: Path.resolve("params"),
 			o: out.full,
 			fast: true,
+			scope: {
+				codepoints: SCOPED_CODEPOINTS,
+				path: Path.resolve(`${workDir}/${fn}.scope.json`),
+				key: scopeKey(fi),
+			},
 			cache: { input: cachePath, output: cacheDiffPath, freshAgeKey: ageKey },
 		});
 		if (cacheUpdated) {
@@ -584,6 +591,25 @@ const DistFastTTF = file.make(
 		}
 	},
 );
+
+// The dependency closure of a scoped build stays valid while the glyph code and the
+// variant selection are unchanged; metric parameters do not change which blocks run.
+function scopeKey(fi) {
+	const hash = createHash("sha1");
+	hash.update(JSON.stringify([fi.shape, fi.variants, fi.derivingVariants]));
+	for (const dir of FS.readdirSync(PACKAGES).sort()) {
+		for (const sub of ["src", "lib"]) {
+			const root = Path.join(PACKAGES, dir, sub);
+			if (!FS.existsSync(root)) continue;
+			for (const f of FS.readdirSync(root, { recursive: true }).sort()) {
+				if (!f.endsWith(".mjs") && !f.endsWith(".js")) continue;
+				hash.update(f);
+				hash.update(FS.readFileSync(Path.join(root, f)));
+			}
+		}
+	}
+	return hash.digest("hex");
+}
 
 const BuildCM = file.make(
 	(gr, f) => `${BUILD}/TTF/${gr}/${f}.charmap.mpz`,
@@ -692,18 +718,18 @@ const DistWoff2 = file.make(
 //////              Font Distribution                //////
 ///////////////////////////////////////////////////////////
 
-// Single-file entry points, e.g. `single::IoskeleyMono-Regular`, `fast::IoskeleyMono-Regular`
+// Single-file entry points, e.g. `single::IoskeleyMono-Regular`, `scoped::IoskeleyMono-Regular`
 const _Entry_SingleUnhintedTTF = task.group("single", async (target, fn) => {
 	const [{ fileNameToBpMap }] = await target.need(BuildPlans);
 	const fi = fileNameToBpMap[fn];
 	if (!fi) fail(`Build plan for '${fn}' not found.`);
 	await target.need(DistUnhintedTTF(fi.prefix, fn));
 });
-const _Entry_SingleFastTTF = task.group("fast", async (target, fn) => {
+const _Entry_SingleScopedTTF = task.group("scoped", async (target, fn) => {
 	const [{ fileNameToBpMap }] = await target.need(BuildPlans);
 	const fi = fileNameToBpMap[fn];
 	if (!fi) fail(`Build plan for '${fn}' not found.`);
-	await target.need(DistFastTTF(fi.prefix, fn));
+	await target.need(DistScopedTTF(fi.prefix, fn));
 });
 
 // Group-level entry points

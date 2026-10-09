@@ -21,7 +21,7 @@ async function main(argv) {
 		? await Caching.load(argv.cache.input, argv.menu.version, argv.cache.freshAgeKey)
 		: null;
 	// Build font
-	const { font, charMap, cacheUpdated, ttfaControls } = await buildFont(para, cache);
+	const { font, charMap, cacheUpdated, ttfaControls } = await buildFont(para, cache, argv.scope);
 
 	// Save charmap
 	if (argv.oCharMap) await fs.promises.writeFile(argv.oCharMap, zlib.gzipSync(encode(charMap)));
