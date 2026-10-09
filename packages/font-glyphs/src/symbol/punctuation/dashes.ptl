@@ -31,10 +31,12 @@ glyph-block Symbol-Punctuation-Dashes : begin
 		define joiningOverlap : (-Width) / 6
 
 		foreach { suffix { yBar } } [Object.entries UnderScoreConfig] : do
-			create-glyph "underscore.\(suffix)" : HBar.b SB RightSB yBar
+			# Berkeley Mono: heavier and lower than the other underscore-based glyphs.
+			create-glyph "underscore.\(suffix)" : HBar.b SB RightSB (yBar - 0.08 * Stroke - 56) (1.08 * Stroke)
+			# Berkeley Mono: slightly lower, wider apart, thinner.
 			create-glyph "doubleUnderscore.\(suffix)" : composite-proc
-				HBar.b SB RightSB  yBar
-				HBar.b SB RightSB (yBar - openBoxGap)
+				HBar.b SB RightSB (yBar - 5) (0.94 * Stroke)
+				HBar.b SB RightSB (yBar - openBoxGap - 13) (0.94 * Stroke)
 			create-glyph "openBox.\(suffix)" : composite-proc
 				HBar.b SB RightSB yBar
 				OpenBoxSide (yBar + HalfStroke)
@@ -49,7 +51,8 @@ glyph-block Symbol-Punctuation-Dashes : begin
 
 	create-glyph 'hyphen' '-' : glyph-proc
 		local df : include : DivFrame para.advanceScaleF
-		include : HBar.m df.leftSB df.rightSB SymbolMid
+		# Berkeley Mono: shorter, heavier hyphen.
+		include : HBar.m (df.leftSB + 33) (df.rightSB - 33) SymbolMid (1.08 * Stroke)
 
 	create-glyph 'armn/hyphen' 0x58A : glyph-proc
 		local df : include : DivFrame para.advanceScaleF
@@ -69,13 +72,14 @@ glyph-block Symbol-Punctuation-Dashes : begin
 
 	create-glyph 'enDash' 0x2013 : glyph-proc
 		set-width Width
-		include : HBar.m [mix 0 SB 0.5] [mix Width RightSB 0.5] SymbolMid
+		# Berkeley Mono: en dash spans the side bearings, heavier.
+		include : HBar.m SB RightSB SymbolMid (1.08 * Stroke)
 
 	for-width-kinds WideWidth1
 		define emDashWidth : if (para.isQuasiProportional && MosaicWidthScalar > 1) UPM MosaicWidth
 		create-glyph [MangleName 'emDash'] [MangleUnicode 0x2014] : glyph-proc
 			set-width emDashWidth
-			include : HBar.m 0 emDashWidth SymbolMid
+			include : HBar.m 0 emDashWidth SymbolMid (1.08 * Stroke)
 
 		alias [MangleName 'horizontalBar'] [MangleUnicode 0x2015] [MangleName 'emDash']
 
