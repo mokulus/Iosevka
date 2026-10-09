@@ -16,7 +16,7 @@ glyph-block Letter-Latin-K : begin
 	glyph-block-import Letter-Shared-Shapes : DiagTail CyrDescender
 	glyph-block-import Letter-Shared-Shapes : LetterBarOverlay PalatalHook TopHook
 
-	define [KBalance      slabLT   fStraightBar] : if fStraightBar (Width / 32) 0
+	define [KBalance      slabLT   fStraightBar] : if fStraightBar (Width / 20) 0
 	define [KBalanceRight slabLegs fStraightBar] : if slabLegs 0 : if fStraightBar (Width / 32) 0
 	define [KOvershootX slabLegs fStraightBar top swRef] : if fStraightBar (([if slabLegs 0 : (-4) * OX] - swRef / 3) * (XH / top)) 0
 
@@ -78,8 +78,8 @@ glyph-block Letter-Latin-K : begin
 			local kshRightBot : right + [KBalanceRight slabLegs true]
 			local kshRightTop : if fHookTop (kshRightBot - HookX * 0.5 + [HSwToV : 0.5 * stroke]) kshRightBot
 
-			local attach  : top * 0.42 - stroke
-			local attach2 : top * 0.72 + stroke
+			local attach  : top * [if (top < CAP) 0.55 0.42] - stroke
+			local attach2 : top * 0.65 + stroke
 
 			set-base-anchor 'trailing' (kshRightBot - ox) 0
 
@@ -566,12 +566,13 @@ glyph-block Letter-Latin-K : begin
 
 	foreach { suffix { LegsImpl {slabLT slabLB slabLegs} } } [pairs-of LowerKConfig] : do
 		define fStraightBar : LegsImpl !== KLegs.Curly
+		define kSB : SB + [if fStraightBar (Width / 40) 0]
 
 		define [kBaseShape attachment] : glyph-proc
-			local xBarLeft : SB + [KBalance slabLT fStraightBar]
+			local xBarLeft : kSB + [KBalance slabLT fStraightBar]
 			include : LeaningAnchor.Above.VBar.l xBarLeft
 			include : VBar.l xBarLeft 0 Ascender
-			include : LegsImpl false SB RightSB Stroke XH slabLT slabLegs attachment
+			include : LegsImpl false kSB RightSB Stroke XH slabLT slabLegs attachment
 			if slabLT : include : HSerif.lt xBarLeft Ascender SideJut
 			if slabLB : include : tagged 'serifLB'
 				HSerif.mb (xBarLeft + [HSwToV HalfStroke]) 0 Jut
@@ -593,18 +594,18 @@ glyph-block Letter-Latin-K : begin
 		create-glyph "kStroke.\(suffix)" : glyph-proc
 			include [refer-glyph "k.\(suffix)"] AS_BASE ALSO_METRICS
 			include : LetterBarOverlay.l.in
-				x     -- (SB + [KBalance slabLT fStraightBar])
+				x     -- (kSB + [KBalance slabLT fStraightBar])
 				bot   -- XH
 				top   -- (Ascender - [if slabLT Stroke 0])
 
 		create-glyph "kHookTop.\(suffix)" : glyph-proc
 			include : MarkSet.b
-			local xBarLeft : SB + [KBalance slabLT fStraightBar]
+			local xBarLeft : kSB + [KBalance slabLT fStraightBar]
 			include : TopHook.toRight.lBarInner
 				x    -- xBarLeft
 				yBot -- 0
 				yTop -- Ascender
-			include : LegsImpl false SB RightSB Stroke XH slabLT slabLegs
+			include : LegsImpl false kSB RightSB Stroke XH slabLT slabLegs
 			if slabLB : include : tagged 'serifLB'
 				HSerif.mb (xBarLeft + [HSwToV HalfStroke]) 0 Jut
 			include : LeaningAnchor.Above.VBar.l xBarLeft
