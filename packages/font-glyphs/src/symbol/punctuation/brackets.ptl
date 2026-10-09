@@ -70,19 +70,19 @@ glyph-block Symbol-Punctuation-Brackets : begin
 			return : Paren.Shape df df.mvs dp
 		define [FlatArcShape df] : begin
 			local dp : object
-				parenOutside           (0.5 * DesignParameters.parenOutside)
-				parenInside            DesignParameters.parenInside
+				parenOutside           0.385
+				parenInside            0.975
 				parenOutsideSwAdj      DesignParameters.parenOutsideSwAdj
 				parenInsideSwAdj       DesignParameters.parenInsideSwAdj
 				parenCurliness         [mix 1 DesignParameters.parenCurliness 0.5]
-				parenOvershoot         DesignParameters.parenOvershoot
+				parenOvershoot         0.025
 			local dim : Paren.Dim df 0 dp
 			return : dispiro
 				widths.lhs df.mvs
 				g4.left.start dim.inside dim.top
 				archv
-				flat dim.outside [mix dim.bottom dim.top 0.65]
-				curl dim.outside [mix dim.bottom dim.top 0.35]
+				flat dim.outside [mix dim.bottom dim.top 0.63]
+				curl dim.outside [mix dim.bottom dim.top 0.37]
 				arcvh
 				g4.right.start dim.inside dim.bottom
 
