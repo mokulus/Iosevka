@@ -151,10 +151,14 @@ glyph-block Mark-Horn-And-Angle : begin
 	select-variant "dotTL" 0x1DF8 (follow -- "diacriticDot")
 	select-variant "dotTR" 0x358 (follow -- "diacriticDot")
 
-	derive-glyphs 'commaTR' 0x315 'commaAbove' : function [src gr] : glyph-proc
+	create-glyph 'commaTR' 0x315 : glyph-proc
 		set-width 0
-		include : refer-glyph src
-		include : ApparentTranslate (RightSB - Middle + DotRadius) 0
+		# Berkeley Mono: a straight tick (not a comma), top at the ascender.
+		local xc : markMiddle + (RightSB - Middle + DotRadius)
+		local yT : Ascender - 6
+		local yB : yT - 0.95 * (Ascender - XH)
+		local w : 1.05 * Stroke
+		include : Rect yT yB (xc - w / 2) (xc + w / 2)
 		set-mark-anchor 'topRight' 0 XH 0 aboveMarkTop
 		set-base-anchor 'aboveBraceL' ((-SB) + DotRadius) aboveMarkMid
 		set-base-anchor 'aboveBraceR' ((-SB) + DotRadius) aboveMarkMid

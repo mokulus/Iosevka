@@ -178,7 +178,7 @@ glyph-block Letter-Latin-Lower-D : begin
 		include : RetroflexHook.rExt RightSB 0
 		include : LeaningAnchor.Below.VBar.r RightSB
 
-	CreateCommaCaronComposition 'dCaron' 0x10F 'dCaron/base' (Width - [HSwToV QuarterStroke])
+	CreateCommaCaronComposition 'dCaron' 0x10F 'dCaron/base' (Width - [HSwToV QuarterStroke]) (-19)
 	CreateAccentedComposition 'dWedge' null 'd' 'caronAbove'
 
 	derive-multi-part-glyphs 'dDot' 0x1E0B {'d' 'dotAbove'} : lambda [srcs gr] : glyph-proc
