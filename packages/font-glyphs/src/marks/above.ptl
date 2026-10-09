@@ -139,7 +139,7 @@ glyph-block Mark-Above : begin
 	create-glyph 'ringAbove' 0x30A : glyph-proc
 		set-width 0
 		include : StdAnchors.medium
-		include : RingShape markMiddle aboveMarkMid
+		include : RingShape markMiddle (aboveMarkMid + 45) (0.97 * [RingDims].radiusOut)
 
 	create-glyph 'dblRingAbove' 0x1AB2 : glyph-proc
 		set-width 0
