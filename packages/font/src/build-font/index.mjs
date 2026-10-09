@@ -94,7 +94,19 @@ function buildScopedGlyphs(para, scope) {
 	const result = buildGlyphs(para);
 	const codepoints = scope.codepoints.filter(u => result.glyphStore.queryByUnicode(u));
 	const targets = codepoints.map(u => result.glyphStore.queryByUnicode(u));
-	const filter = targets[0]._m_dependencyManager.traverseDependencies(targets);
+	const dm = targets[0]._m_dependencyManager;
+	const filter = dm.traverseDependencies(targets);
+	// Per code point: the glyph blocks that create it or any glyph it reuses (bases, marks,
+	// components). Used to plan which glyphs can be worked on independently.
+	const blocksByCodepoint = {};
+	for (const [i, u] of codepoints.entries()) {
+		const blocks = new Set();
+		for (const g of dm.traverseGlyphDependenciesImpl([targets[i]], false).keys()) {
+			const b = dm.glyphToBlock.get(g);
+			if (b) blocks.add(b);
+		}
+		blocksByCodepoint[u] = [...blocks];
+	}
 	fs.writeFileSync(
 		scope.path,
 		JSON.stringify({
@@ -102,6 +114,7 @@ function buildScopedGlyphs(para, scope) {
 			codepoints,
 			glyphs: [...filter.glyphIdFilter],
 			blocks: [...filter.blockIdFilter],
+			blocksByCodepoint,
 		}),
 	);
 	return result;
