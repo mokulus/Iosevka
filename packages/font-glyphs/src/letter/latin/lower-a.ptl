@@ -125,6 +125,10 @@ glyph-block Letter-Latin-Lower-A : begin
 			include : df.markSet.e
 			if xTrailing : set-base-anchor 'trailing' xTrailing 0
 			include : body df hookStyle
+			# Berkeley Mono: narrower.
+			include : Translate (-Middle) 0
+			include : Scale 0.94 1
+			include : Translate (Middle - 2) 0
 		create-glyph "aRetroflexHook.\(suffix)" : glyph-proc
 			include [refer-glyph "a.\(suffix)"] AS_BASE ALSO_METRICS
 			include : RetroflexHook.rSideJut RightSB 0 (yOverflow -- Stroke)

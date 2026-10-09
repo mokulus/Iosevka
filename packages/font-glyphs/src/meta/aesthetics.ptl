@@ -419,7 +419,7 @@ export : define DesignParameters : object
 	braceCurlyM2               0.45
 	braceOvershoot             0.02
 	# Bar position
-	aBarPos                    0.5304
+	aBarPos                    0.56
 	hBarPos                    0.525
 	eBarPos                    0.50
 	fiveBarPos                 0.64
