@@ -47,6 +47,10 @@ const validMetricOverrideFields = new Set([
 	"archDepth",
 	"smallArchDepth",
 	"advanceScaleSp",
+	"contrast",
+	"overshoot",
+	"overshootx",
+	"slopeCenter",
 ]);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

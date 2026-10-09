@@ -38,9 +38,11 @@ export : define [calculateMetrics para] : begin
 	define Contrast  : fallback para.contrast 1
 
 	# Transform constructors
+	# Slanted glyphs shear around y = SlopeCenter (para.slopeCenter, default SymbolMid; 0 = baseline).
+	define SlopeCenter : fallback para.slopeCenter SymbolMid
 	define [Italify angle shift] : begin
 		local slope : Math.tan : [fallback angle para.slopeAngle] / 180 * Math.PI
-		return : new Transform 1 slope 0 1 [fallback shift : (-slope) * SymbolMid] 0
+		return : new Transform 1 slope 0 1 [fallback shift : (-slope) * SlopeCenter] 0
 	define [Upright angle shift] [Italify angle shift].inverse
 	define [Scale sx sy] : new Transform sx 0 0 [fallback sy sx] 0 0
 	define [Translate x y] : new Transform 1 0 0 1 x y
@@ -259,7 +261,7 @@ export : define [setFontMetrics para metrics fm] : begin
 	set fm.post.italicAngle       : Math.round (0 - para.slopeAngle)
 	set fm.hhea.caretSlopeRise    : if para.slopeAngle (1000)                      1
 	set fm.hhea.caretSlopeRun     : if para.slopeAngle ((-slope) * 1000)           0
-	set fm.hhea.caretOffset       : if para.slopeAngle ((-slope) * para.symbolMid) 0
+	set fm.hhea.caretOffset       : if para.slopeAngle ((-slope) * [fallback para.slopeCenter para.symbolMid]) 0
 
 	# Fixed metrics
 	set fm.os2.yStrikeoutPosition    para."os2.yStrikeoutPosition"
