@@ -11,7 +11,8 @@ glyph-block Symbol-Punctuation-Bullets : begin
 
 	define BulletRadius : Math.max (Width * 2 / 7) [AdviceStroke 3]
 
-	create-glyph 'bullet' 0x2022 : DotAt Middle SymbolMid (BulletRadius - O)
+	# Berkeley Mono: smaller and lower.
+	create-glyph 'bullet' 0x2022 : DotAt Middle (SymbolMid - 42) (0.68 * BulletRadius - O)
 
 	create-glyph 'triangularBullet' 0x2023 : glyph-proc
 		local radius : BulletRadius * 1.5

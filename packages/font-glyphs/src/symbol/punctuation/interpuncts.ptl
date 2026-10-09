@@ -13,7 +13,8 @@ glyph-block Symbol-Punctuation-Interpuncts : begin
 	foreach { suffix { DrawAt kDotRadius overshoot } } [Object.entries DotVariants] : do
 		create-glyph "interpunct.\(suffix)" : glyph-proc
 			local df : include : DivFrame para.advanceScaleI
-			include : DrawAt df.middle SymbolMid (PeriodRadius * kDotRadius - overshoot)
+			# Berkeley Mono: set lower.
+			include : DrawAt df.middle (SymbolMid - 42) (PeriodRadius * kDotRadius - overshoot)
 
 	select-variant 'interpunct' 0xB7 (follow -- 'punctuationDot')
 	alias 'period/mid' null 'interpunct'
