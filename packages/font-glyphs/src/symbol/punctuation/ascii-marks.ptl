@@ -58,8 +58,8 @@ glyph-block Symbol-Punctuation-Ascii-Marks : begin
 
 	create-glyph 'degree' 0xB0 : glyph-proc
 		include [refer-glyph 'markBaseSpace'] AS_BASE ALSO_METRICS
-		include [refer-glyph 'ringAbove']
-		include : MarkZoom currentGlyph.advanceWidth
+		# Berkeley Mono: a round ring set left of centre, just below cap height.
+		include : RingStrokeAt (SB + 123) (CAP - 98) 136 54
 
 	do "spacing centered marks"
 		define shift : ApparentTranslate 0 (SymbolMid - aboveMarkMid)
