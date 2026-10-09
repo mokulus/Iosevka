@@ -304,7 +304,10 @@ glyph-block Symbol-Math-Relation-Sym : begin
 		DrawAt Middle PlusTop (DotRadius * kr * OperatorStroke / Stroke - ov)
 		DrawAt Middle PlusBot (DotRadius * kr * OperatorStroke / Stroke - ov)
 
-	VDual 'approx' 0x2248 'sym' approxDist
+	# Berkeley Mono: two of the boxy ASCII tildes.
+	create-glyph 'approx' 0x2248 : glyph-proc
+		include : with-transform [Translate 0 (+100)] [refer-glyph 'asciiTilde']
+		include : with-transform [Translate 0 (-100)] [refer-glyph 'asciiTilde']
 
 	create-glyph 'aapprox' 0x224B : glyph-proc
 		include : symWave (SymbolMid + approxDist) 1
