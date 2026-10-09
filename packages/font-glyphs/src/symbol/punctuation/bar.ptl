@@ -24,11 +24,15 @@ glyph-block Symbol-Punctuation-Bar : begin
 			set-base-anchor 'below' x bot
 		include : VBar.m x bot top _sw
 
-	create-glyph 'bar.upright'              : BarShape Middle ParenTop ParenBot
-	create-glyph 'bar.slanted.naturalSlope' : BarShape Middle ParenTop ParenBot
+	# Berkeley Mono: raised and slightly thinner.
+	define verticalBarTop : ParenTop + 49
+	define verticalBarBot : ParenBot + 37
+	define verticalBarSw : 0.9 * Stroke
+	create-glyph 'bar.upright'              : BarShape Middle verticalBarTop verticalBarBot verticalBarSw
+	create-glyph 'bar.slanted.naturalSlope' : BarShape Middle verticalBarTop verticalBarBot verticalBarSw
 	create-glyph 'bar.slanted.forceUpright' : glyph-proc
 		include : ForceUpright
-		include : BarShape Middle ParenTop ParenBot
+		include : BarShape Middle verticalBarTop verticalBarBot verticalBarSw
 
 	create-glyph 'ligBarInsideBracketLeft' : glyph-proc
 		Joining.set currentGlyph Joining.Classes.Left
