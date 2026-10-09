@@ -10,6 +10,8 @@ import { getParametersT } from "./param/index.mjs";
 
 export default main;
 async function main(argv) {
+	// Fast iteration builds skip derived glyphs; each font builds in its own process.
+	if (argv.fast) process.env.IOSKELEY_FAST = "1";
 	// Set up parameters
 	const paraT = await getParametersT(argv);
 	const para = paraT(argv);

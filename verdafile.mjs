@@ -547,6 +547,44 @@ const DistUnhintedTTF = file.make(
 	},
 );
 
+// Iteration build without derived glyphs (math styles, enclosures, superscripts).
+// Not for release: the glyph set is incomplete.
+const DistFastTTF = file.make(
+	(gr, fn) => `${DIST}/${gr}/TTF-Fast/${fn}.ttf`,
+	async (target, out, gr, fn) => {
+		await target.need(Scripts, Parameters, Dependencies, de(out.dir));
+		const [fi] = await target.need(FontInfoOf(fn));
+		if (fi.spacingDerive) fail(`Fast builds need an ab-initio plan; '${fn}' derives its spacing.`);
+
+		const cacheFileName =
+			`${Math.round(1000 * fi.shape.weight)}-${Math.round(1000 * fi.shape.width)}-` +
+			`${Math.round(3600 * fi.shape.slopeAngle)}-${fi.shape.serifs}`;
+		const cachePath = `${SHARED_CACHE}/${cacheFileName}.mpz`;
+		const cacheDiffPath = `${BUILD}/TTF-Fast/${gr}/${fn}.cache.mpz`;
+		await target.need(de(`${BUILD}/TTF-Fast/${gr}`), de(SHARED_CACHE));
+
+		echo.action(echo.hl.command(`Create fast TTF`), out.full);
+		const { cacheUpdated } = await silently.node("packages/font/src/index.mjs", {
+			...fi,
+			paramsDir: Path.resolve("params"),
+			o: out.full,
+			fast: true,
+			cache: { input: cachePath, output: cacheDiffPath, freshAgeKey: ageKey },
+		});
+		if (cacheUpdated) {
+			const lock = build.locks.alloc(cacheFileName);
+			await lock.acquire();
+			await silently.node.worker(`packages/font/src/merge-cache.mjs`, {
+				base: cachePath,
+				diff: cacheDiffPath,
+				version: fi.menu.version,
+				freshAgeKey: ageKey,
+			});
+			lock.release();
+		}
+	},
+);
+
 const BuildCM = file.make(
 	(gr, f) => `${BUILD}/TTF/${gr}/${f}.charmap.mpz`,
 	async (target, _output, gr, f) => {
@@ -654,12 +692,18 @@ const DistWoff2 = file.make(
 //////              Font Distribution                //////
 ///////////////////////////////////////////////////////////
 
-// Single-file entry point, e.g. `single::IoskeleyMono-Regular`
+// Single-file entry points, e.g. `single::IoskeleyMono-Regular`, `fast::IoskeleyMono-Regular`
 const _Entry_SingleUnhintedTTF = task.group("single", async (target, fn) => {
 	const [{ fileNameToBpMap }] = await target.need(BuildPlans);
 	const fi = fileNameToBpMap[fn];
 	if (!fi) fail(`Build plan for '${fn}' not found.`);
 	await target.need(DistUnhintedTTF(fi.prefix, fn));
+});
+const _Entry_SingleFastTTF = task.group("fast", async (target, fn) => {
+	const [{ fileNameToBpMap }] = await target.need(BuildPlans);
+	const fi = fileNameToBpMap[fn];
+	if (!fi) fail(`Build plan for '${fn}' not found.`);
+	await target.need(DistFastTTF(fi.prefix, fn));
 });
 
 // Group-level entry points

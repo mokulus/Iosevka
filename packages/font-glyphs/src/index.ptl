@@ -109,10 +109,11 @@ export : define [buildGlyphs para recursive] : begin
 
 	# Auto-builds
 	if [not recursive] : begin
-		run-glyph-module "./auto-build/recursive-build.mjs"
+		# IOSKELEY_FAST: skip derived glyphs (math styles, enclosures, superscripts) for quick iteration builds.
+		if [not process.env.IOSKELEY_FAST] : run-glyph-module "./auto-build/recursive-build.mjs"
 		run-glyph-module "./auto-build/accents.mjs"
-		run-glyph-module "./auto-build/transformed.mjs"
-		run-glyph-module "./auto-build/composite.mjs"
+		if [not process.env.IOSKELEY_FAST] : run-glyph-module "./auto-build/transformed.mjs"
+		if [not process.env.IOSKELEY_FAST] : run-glyph-module "./auto-build/composite.mjs"
 
 	$Exec$.executePendingBlocks
 
