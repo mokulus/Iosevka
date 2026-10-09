@@ -15,22 +15,22 @@ glyph-block Letter-Latin-Upper-E : begin
 	define xEBarLeft     : [mix 0     SB      kSB] - O
 	define xRevEBarRight : [mix Width RightSB kSB] + O
 
-	define [EShape] : with-params [top pyBar serifLT serifLB serifRT serifRB serifRM [stroke [AdviceStroke2 2 3 top]]] : glyph-proc
-		local xMidBarRight : mix Width RightSB : EFMidBarShrinkK [DivFrame 1] serifRT
+	define [EShape] : with-params [top pyBar serifLT serifLB serifRT serifRB serifRM [stroke [AdviceStroke2 2 3 top]] [xLeft xEBarLeft] [xRight RightSB] [midExt 0]] : glyph-proc
+		local xMidBarRight : midExt + [mix (Width + xRight - RightSB) xRight : EFMidBarShrinkK [DivFrame 1] serifRT]
 		local barPos : EFMidBarPosY top 0 pyBar
 
-		include : VBar.l xEBarLeft 0 top stroke
-		include : HBar.t (xEBarLeft - O) RightSB      top    stroke
-		include : HBar.m (xEBarLeft - O) xMidBarRight barPos stroke
-		include : HBar.b (xEBarLeft - O) RightSB      0      stroke
+		include : VBar.l xLeft 0 top stroke
+		include : HBar.t (xLeft - O) xRight       top    stroke
+		include : HBar.m (xLeft - O) xMidBarRight barPos stroke
+		include : HBar.b (xLeft - O) xRight       0      stroke
 
-		if serifLT : include : HSerif.lt xEBarLeft top SideJut stroke
-		if serifLB : include : HSerif.lb xEBarLeft 0   SideJut stroke
+		if serifLT : include : HSerif.lt xLeft top SideJut stroke
+		if serifLB : include : HSerif.lb xLeft 0   SideJut stroke
 
 		local { jutTop jutBot jutMid } : EFVJutLength top 0 pyBar stroke
 		local swVJut : VJutStroke * (stroke / Stroke)
-		if serifRT : include : VSerif.dr RightSB      top    jutTop swVJut
-		if serifRB : include : VSerif.ur RightSB      0      jutBot swVJut
+		if serifRT : include : VSerif.dr xRight       top    jutTop swVJut
+		if serifRB : include : VSerif.ur xRight       0      jutBot swVJut
 		if serifRM : include : VSerif.mr xMidBarRight barPos jutMid swVJut
 
 	define [RevEShape] : with-params [top pyBar serifRT serifRB serifLT serifLB serifLM [stroke [AdviceStroke2 2 3 top]]] : glyph-proc
@@ -60,7 +60,8 @@ glyph-block Letter-Latin-Upper-E : begin
 	foreach { suffix { lt lb rt rb rm } } [Object.entries EConfig] : do
 		create-glyph "E.\(suffix)" : glyph-proc
 			include : MarkSet.capital
-			include : EShape CAP (serifLT -- lt) (serifLB -- lb) (serifRT -- rt) (serifRB -- rb) (serifRM -- rm)
+			# Berkeley Mono: narrower, set right, with a longer middle arm.
+			include : EShape CAP (serifLT -- lt) (serifLB -- lb) (serifRT -- rt) (serifRB -- rb) (serifRM -- rm) (xLeft -- (xEBarLeft + 32)) (xRight -- (RightSB + 6)) (midExt -- 15)
 			set-base-anchor 'trailing' RightSB 0
 
 		create-glyph "grek/Epsilon.\(suffix)" : glyph-proc
