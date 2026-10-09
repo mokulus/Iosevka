@@ -199,6 +199,11 @@ glyph-block Letter-Latin-S : begin
 			include : SStrokeImpl df CAP 0 doTS doBS sw EssUpper
 			include : SAutoSlabStart df doTS CAP sw Hook
 			include : SAutoSlabEnd   df doBS 0   sw Hook
+			# Berkeley Mono: width and position.
+			include : Translate (-Middle) 0
+			include : Scale 1.12 1
+			include : Translate (Middle + (2.0)) 0
+
 
 		create-glyph "smcpS.\(suffix)" : glyph-proc
 			local df : include DfCapital
