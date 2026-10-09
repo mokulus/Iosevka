@@ -540,7 +540,13 @@ glyph-block Symbol-Math-Relation-Inequality : begin
 	create-glyph 'largerEqUpper'       : LargerShape         (SymbolMid + dSH + lessEqDist) (SymbolMid - dSH + lessEqDist) SB RightSB
 
 	derive-composites 'less.narrow'         null 'lessEqUpper' [ApparentTranslate 0 (-lessEqDist)]
-	derive-composites 'lessEq'            0x2264 'lessEqUpper' 'eqLower'
+	# Berkeley Mono: compact chevron over a short, raised bar.
+	create-glyph 'lessEq' 0x2264 : glyph-proc
+		local yMid : SymbolMid + 56
+		include : intersection
+			LessShape (yMid + dH - 85) (yMid - dH + 85) (SB + 17) (RightSB - 10)
+			MaskLeft (RightSB - 10)
+		include : HBar.m (SB + 16) (RightSB - 16) (SymbolMid - 230) OperatorStroke
 	derive-composites 'lessEqBarNegated'  0x2A87 'lessEqUpper' 'eqBarNegatedLower'
 	derive-composites 'lessSym'           0x2272 'lessEqUpper' 'symLower'
 	derive-composites 'lessSymBarNegated' 0x22E6 'lessEqUpper' 'symBarNegatedLower'
@@ -553,7 +559,12 @@ glyph-block Symbol-Math-Relation-Inequality : begin
 		DrawAt (RightSB - DotRadius) (SymbolMid + lessEqDist) (DotRadius * kr * [AdviceStroke 4] / Stroke - ov)
 
 	derive-composites 'greater.narrow'         null 'greaterEqUpper' [ApparentTranslate 0 (-lessEqDist)]
-	derive-composites 'greaterEq'            0x2265 'greaterEqUpper' 'eqLower'
+	create-glyph 'greaterEq' 0x2265 : glyph-proc
+		local yMid : SymbolMid + 56
+		include : intersection
+			GreaterShape (yMid + dH - 85) (yMid - dH + 85) (SB + 10) (RightSB - 17)
+			MaskRight (SB + 10)
+		include : HBar.m (SB + 16) (RightSB - 16) (SymbolMid - 230) OperatorStroke
 	derive-composites 'greaterEqBarNegated'  0x2A88 'greaterEqUpper' 'eqBarNegatedLower'
 	derive-composites 'greaterSym'           0x2273 'greaterEqUpper' 'symLower'
 	derive-composites 'greaterSymBarNegated' 0x22E7 'greaterEqUpper' 'symBarNegatedLower'
