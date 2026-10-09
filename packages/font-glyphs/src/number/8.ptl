@@ -187,13 +187,18 @@ glyph-block Digits-Eight : begin
 		define yt : mix SymbolMid OperTop 0.75
 		define yb : mix SymbolMid OperBot 0.75
 		create-glyph [MangleName 'infty'] [MangleUnicode 0x221E] : glyph-proc
+			# Berkeley Mono: wider and flatter.
+			local ytI : mix SymbolMid OperTop (0.75 * 0.86)
+			local ybI : mix SymbolMid OperBot (0.75 * 0.86)
+			local kW 1.26
 			set-width MosaicWidth
-			include : PointingTo xr yt xr yb : function [] : glyph-proc
+			include : PointingTo xr ytI xr ybI : function [] : glyph-proc
 				set currentGlyph.gizmo : Italify para.slopeAngle
-				local box : new Box (xr - xl) 0 0 (yt - yb)
+				local box : new Box ((xr - xl) * kW) 0 0 (ytI - ybI)
 				include : EightShape (OperatorStroke / xSS) box 1 0.9
 				include : Italify (-para.slopeAngle)
 			include : ScaleAround (MosaicUnitWidth / 2) SymbolMid xSF xSF
+			include : ApparentTranslate ((xr - xl) * (kW - 1) / 2 * xSF) 0
 
 		create-glyph [MangleName 'propto'] [MangleUnicode 0x221D] : glyph-proc
 			set-width MosaicWidth
