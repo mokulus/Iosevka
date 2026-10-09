@@ -27,7 +27,8 @@ glyph-block Symbol-Math-Arith : begin
 		define [PlusShape.joinCap x] : JunctDiamond x SymbolMid OperatorStroke
 
 		create-glyph 'plus' '+' : PlusShape SB RightSB
-		create-glyph 'minus' 0x2212 : HBar.m SB RightSB SymbolMid OperatorStroke
+		# Berkeley Mono: the minus reaches past the side bearings.
+		create-glyph 'minus' 0x2212 : HBar.m (SB - 18) (RightSB + 18) SymbolMid OperatorStroke
 
 		define [HebrPlusShape left right s sw] : union
 			HBar.m left right SymbolMid [fallback sw OperatorStroke]
@@ -45,8 +46,11 @@ glyph-block Symbol-Math-Arith : begin
 			SquareAt Middle SymbolMid DotRadius
 
 		create-glyph 'plusminus' 0xB1 : glyph-proc
-			include : refer-glyph "plus"
-			include : HBar.b SB RightSB 0 OperatorStroke
+			# Berkeley Mono: compact plus over a raised bar.
+			local y : SymbolMid + 73
+			include : HBar.m (SB + 16) (RightSB - 16) y OperatorStroke
+			include : VBar.m Middle (y - 181) (y + 181) OperatorStroke
+			include : HBar.m (SB + 16) (RightSB - 16) 90 OperatorStroke
 
 		turned 'minusplus' 0x2213 'plusminus' Middle SymbolMid
 
@@ -119,8 +123,9 @@ glyph-block Symbol-Math-Arith : begin
 			include : MultiplyStroke2Shape OperatorStroke 1 1 1
 
 		create-glyph 'multiply' 0xD7 : glyph-proc
-			include : MultiplyStroke1Shape OperatorStroke 1 1 1
-			include : MultiplyStroke2Shape OperatorStroke 1 1 1
+			# Berkeley Mono: a smaller cross.
+			include : MultiplyStroke1Shape OperatorStroke 1 0.68 0.68
+			include : MultiplyStroke2Shape OperatorStroke 1 0.68 0.68
 
 		create-glyph 'multiplyUnderbar' 0x2A31 : glyph-proc
 			include : refer-glyph "multiply"
@@ -320,9 +325,10 @@ glyph-block Symbol-Math-Arith : begin
 
 			create-glyph "divide.\(suffix)" : glyph-proc
 				include : refer-glyph "minus"
-				define gap : (RightSB - SB) / 2
-				include : DrawAt Middle (SymbolMid + gap) (dr - overshoot)
-				include : DrawAt Middle (SymbolMid - gap) (dr - overshoot)
+				# Berkeley Mono: smaller dots, closer to the bar.
+				define gap : (RightSB - SB) * 0.4
+				include : DrawAt Middle (SymbolMid + gap) (0.9 * dr - overshoot)
+				include : DrawAt Middle (SymbolMid - gap) (0.9 * dr - overshoot)
 
 			create-glyph "rotatedDivide.\(suffix)" : glyph-proc
 				include : refer-glyph "multiply/stroke1"

@@ -12,8 +12,10 @@ glyph-block Symbol-Math-Logicals : begin
 	glyph-block-import Symbol-Punctuation-Bar : BarShape DoubleBarShape TripleBarShape
 
 	create-glyph 'negate' 0xAC : glyph-proc
-		include : refer-glyph "minus"
-		include : VBar.r RightSB (SymbolMid - 0.55 * (RightSB - SB)) SymbolMid OperatorStroke
+		# Berkeley Mono: raised bar, shorter stub.
+		local y : SymbolMid + 82
+		include : HBar.m (SB + 7) (RightSB - 7) y OperatorStroke
+		include : VBar.r (RightSB - 7) (y - 205) y OperatorStroke
 
 	create-glyph 'revNegate' 0x2310 : glyph-proc
 		include : refer-glyph "minus"
