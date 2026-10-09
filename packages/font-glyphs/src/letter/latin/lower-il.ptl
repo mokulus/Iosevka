@@ -28,7 +28,8 @@ glyph-block Letter-Latin-Lower-I : begin
 		define [FlatTailedImpl df doST] : HookyImpl df (doST && mode !== MODE-L) true
 		define [TailedImpl df doST] : mix df.leftSB df.rightSB ([StrokeWidthBlend 0.42 0.46] - [TailedDotlessIShift df])
 		export : define [Center df] : df.middle + 0
-		export : define [Serifed df] : df.middle + [IBalance df]
+		# Berkeley Mono: the serifed i stem sits slightly right.
+		export : define [Serifed df] : df.middle + [IBalance df] + [if (mode === MODE-I) 14 0]
 		export : define [Hooky df] : HookyImpl df true false
 		export : define [HookyBottom df] : HookyImpl df false true
 		export : define [ZShaped df] : HookyImpl df true true
@@ -65,6 +66,13 @@ glyph-block Letter-Latin-Lower-I : begin
 			local jut : Math.max MidJutCenter : mix [HSwToV : 0.5 * df.mvs] LongJut df.adws
 			include : tagged 'serifMB' : HSerif.mb df.middle 0 jut
 			set-base-anchor 'trailing' (df.middle + jut) 0
+
+		# Berkeley Mono: foot serif shifted right by dx and lengthened by ext on each side.
+		export : define [SerifedShifted dx ext] : lambda [df top xMiddle] : glyph-proc
+			include : VBar.m xMiddle 0 top df.mvs
+			local jut : ext + [Math.max MidJutCenter : mix [HSwToV : 0.5 * df.mvs] LongJut df.adws]
+			include : tagged 'serifMB' : HSerif.mb (df.middle + dx) 0 jut
+			set-base-anchor 'trailing' (df.middle + dx + jut) 0
 
 		export : define [Tailed df top xMiddle] : glyph-proc
 			local fine : AdviceStroke 3
@@ -174,7 +182,7 @@ glyph-block Letter-Latin-Lower-I : begin
 		'hookyBottom'           { ILBody.HookyBottom   ILSerifs.None          ILMarks.Serifless  [XMiddleT mode].HookyBottom        para.advanceScaleI   Stroke }
 		'zshaped'               { ILBody.HookyBottom   ILSerifs.Hooky         ILMarks.Serifed    [XMiddleT mode].ZShaped            para.advanceScaleI   Stroke }
 		'zshapedAsymmetric'     { ILBody.HookyBottom   ILSerifs.HookyShort    ILMarks.Serifed    [XMiddleT mode].ZShaped            para.advanceScaleI   Stroke }
-		'serifed'               { ILBody.Serifed       ILSerifs.Serifed       ILMarks.Serifed    [XMiddleT mode].Serifed            para.advanceScaleI   Stroke }
+		'serifed'               { [ILBody.SerifedShifted [if (mode === MODE-L) 8 20] [if (mode === MODE-L) 11 5]] ILSerifs.Serifed ILMarks.Serifed [XMiddleT mode].Serifed para.advanceScaleI Stroke }
 		'serifedAsymmetric'     { ILBody.Serifed       ILSerifs.SerifedShort  ILMarks.Serifed    [XMiddleT mode].Serifed            para.advanceScaleI   Stroke }
 		'tailed'                { ILBody.Tailed        ILSerifs.None          ILMarks.Serifless  [XMiddleT mode].Tailed             para.advanceScaleI   Stroke }
 		'tailedSerifed'         { ILBody.Tailed        ILSerifs.Hooky         ILMarks.Serifed    [XMiddleT mode].TailedSerifed      para.advanceScaleI   Stroke }
