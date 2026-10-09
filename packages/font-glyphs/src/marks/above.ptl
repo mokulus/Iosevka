@@ -835,14 +835,22 @@ glyph-block Mark-Above : begin
 		set-width 0
 		include : StdAnchors.narrow
 
+		# Wedge comma like the punctuation comma: narrow head, straight tail tapering down-left.
 		local radius : commaAboveRadius * DesignParameters.squareDotScalar
-		include : Rect aboveMarkTop (aboveMarkTop - radius * 2) (markMiddle - radius) (markMiddle + radius)
-		include : dispiro
-			widths.rhs [Math.min radius : markFine * [linreg 16 2 90 1.75 markStroke]]
-			flat (markMiddle + radius)  aboveMarkTop [heading Downward]
-			curl (markMiddle + radius) (aboveMarkTop - 2 * radius) [heading Downward]
-			quadControls 0 0.6
-			g4   [mix markMiddle (markMiddle - radius) 0.2] (aboveMarkBot - radius - commaOvershoot2)
+		local s : 2 * radius
+		local xr : markMiddle + radius
+		local xl : xr - 1.0 * s
+		local yT aboveMarkTop
+		local yJ : aboveMarkTop - 0.6 * s
+		local yB : aboveMarkTop - 0.7 * (aboveMarkTop - aboveMarkBot + radius + commaOvershoot2)
+		local xbl : xl - 0.7 * s
+		include : spiro-outline
+			corner xr yT
+			corner xl yT
+			corner xl yJ
+			corner xbl yB
+			corner xl yB
+			corner xr yJ
 		include : ApparentTranslate 0 (DotRadius * 0.3)
 
 	select-variant 'commaAbove' 0x313 (follow -- 'diacriticDot')
