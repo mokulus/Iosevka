@@ -9,13 +9,17 @@ glyph-block Symbol-Punctuation-Daggers : begin
 	glyph-block-import CommonShapes
 	glyph-block-import Common-Derivatives
 
+	# Berkeley Mono: raised, with shorter crossbars.
+	define daggerTop : ParenTop + 49
+	define daggerBot : ParenBot + 37
 	create-glyph 'dagger' 0x2020 : glyph-proc
-		include : VBar.m Middle ParenBot ParenTop
-		include : HBar.m SB RightSB [mix ParenTop ParenBot 0.33]
+		include : VBar.m Middle daggerBot daggerTop
+		include : HBar.m (SB + 36) (RightSB - 36) [mix daggerTop daggerBot 0.29] (0.93 * Stroke)
 
 	create-glyph 'doubledagger' 0x2021 : glyph-proc
-		include : refer-glyph "dagger"
-		include : HBar.m SB RightSB [mix ParenTop ParenBot 0.67]
+		include : VBar.m Middle daggerBot daggerTop
+		include : HBar.m (SB + 36) (RightSB - 36) [mix daggerTop daggerBot 0.31] (0.93 * Stroke)
+		include : HBar.m (SB + 36) (RightSB - 36) [mix daggerTop daggerBot 0.69] (0.93 * Stroke)
 
 	create-glyph 'leftHalfDagger' 0x2E36 : glyph-proc
 		include : VBar.m Middle ParenBot ParenTop
