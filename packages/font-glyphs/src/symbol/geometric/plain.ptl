@@ -401,7 +401,8 @@ glyph-block Symbol-Geometric-Plain : for-width-kinds WideWidth1
 			corner (cx - size * 2 / 3) cy
 
 		StdBlackShape LozengeFill 'blackLozenge' 0x29EB Size.Oblique
-		ConvexWhitePolygon LozengeFill 'whiteLozenge' 0x25CA Size.Oblique
+		# Berkeley Mono: a larger lozenge.
+		ConvexWhitePolygon LozengeFill 'whiteLozenge' 0x25CA [Object.assign {.} Size.Oblique {.size 1.42 .sw (1.12 * Size.Oblique.sw)}]
 
 		StdBlackShape LozengeFill 'blackMediumLozenge' 0x2B27 Size.MediumOblique
 		StdBlackShape LozengeFill 'blackSmallLozenge' 0x2B2A Size.SmallOblique
