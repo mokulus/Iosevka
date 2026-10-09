@@ -80,8 +80,9 @@ glyph-block Symbol-Punctuation-Percentages : begin
 		local halfGapRing : [AdviceStroke 6] / 2
 		local cor : DiagCorDs CAP (r - l) swBar
 
-		include : OShape CAP (CAP / 2 + halfGapRing) l (m - halfGapRing) swRing ada adb
-		include : OShape (CAP / 2 - halfGapRing)  0  (m + halfGapRing) r swRing ada adb
+		# Berkeley Mono: rounder rings, further apart vertically, closer horizontally.
+		include : OShape CAP (CAP / 2 + halfGapRing + 55) l (m - halfGapRing + 13) swRing ada adb
+		include : OShape (CAP / 2 - halfGapRing - 55)  0  (m + halfGapRing - 13) r swRing ada adb
 		include : dispiro
 			corner r CAP [widths.rhs.heading (swBar * cor) Downward]
 			corner [mix r l 0.5] [mix CAP 0 0.5] [widths.center.heading (fineBar * cor) Downward]
