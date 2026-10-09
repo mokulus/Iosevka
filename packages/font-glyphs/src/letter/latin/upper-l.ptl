@@ -41,6 +41,11 @@ glyph-block Letter-Latin-Upper-L : begin
 			set-base-anchor 'cvDecompose'
 				[mix df.leftSB df.rightSB 0.65] + [HSwToV QuarterStroke]
 				mix Stroke CAP 0.5
+			# Berkeley Mono: width and position.
+			include : Translate (-Middle) 0
+			include : Scale 1.06 1
+			include : Translate (Middle + (0.0)) 0
+
 
 		create-glyph "smcpL.\(suffix)" : glyph-proc
 			local df : include : DivFrame 1
