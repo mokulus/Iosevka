@@ -432,6 +432,10 @@ glyph-block Letter-Latin-W : begin
 			local df : include : DivFrame adwsUpper 3
 			include : df.markSet.capital
 			include : implT df CAP bodyType slabType midHClass
+			# Berkeley Mono: wider W.
+			include : Translate (-df.middle) 0
+			include : Scale 1.16 1
+			include : Translate df.middle 0
 
 		create-glyph "smcpW.\(suffix)" : glyph-proc
 			local df : include : DivFrame [if (adwsUpper < para.advanceScaleMM) para.advanceScaleT para.advanceScaleM] 3
@@ -442,6 +446,10 @@ glyph-block Letter-Latin-W : begin
 			local df : include : DivFrame adwsLower 3
 			include : df.markSet.e
 			include : implT df XH bodyType slabType midHClass
+			# Berkeley Mono: wider w.
+			include : Translate (-df.middle) 0
+			include : Scale 1.13 1
+			include : Translate df.middle 0
 
 		create-glyph "ww.\(suffix)": glyph-proc
 			local df : include : DivFrame [if (adwsLower < para.advanceScaleM) para.advanceScaleF 1] 3
