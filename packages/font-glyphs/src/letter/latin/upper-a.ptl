@@ -32,7 +32,7 @@ glyph-block Letter-Latin-Upper-A : begin
 			local fBaseSlabs : maskBits slabKind : bitOr SLAB-LEFT SLAB-RIGHT
 			return : mix [if fBaseSlabs Stroke 0] top : Math.min 0.5 : match bodyShape
 				[Just BODY-ROUND-TOP] : (XH * 0.75) / CAP
-				__                    : (XH * 0.50) / CAP
+				__                    : (XH * 0.47) / CAP
 
 		export : define [Mask df bodyShape top sw] : new-glyph : glyph-proc
 			include : match bodyShape
@@ -139,7 +139,14 @@ glyph-block Letter-Latin-Upper-A : begin
 				include : HOverlayBar [mix 0 SB 0.5] [mix Width RightSB 0.5] (yBar - (Stroke - OverlayStroke) / 2)
 				include : HOverlayBar [mix 0 SB 0.5] [mix Width RightSB 0.5] [mix yBar top 0.25]
 
-		create-glyph "A.\(suffix)"          : AShapeImpl "capital" CAP
+		create-glyph "A.\(suffix)" : glyph-proc
+			include : AShapeImpl "capital" CAP
+			# Berkeley Mono: width and position.
+			include : Translate (-Middle) 0
+			include : Scale 1.13 1
+			include : Translate (Middle + (0.0)) 0
+
+
 		create-glyph "grek/Alpha.\(suffix)" : AShapeImpl "capital" CAP true
 		create-glyph "smcpA.\(suffix)"      : AShapeImpl "e"       XH
 
