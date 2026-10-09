@@ -6,7 +6,8 @@ glyph-module
 
 glyph-block Symbol-Math-Negation : begin
 	glyph-block-import NotGlyphFn : notGlyph
-	notGlyph        null 0x2260 'equal'
+	# Berkeley Mono: a short slash.
+	notGlyph        null 0x2260 'equal' (SymbolMid + 245) (SymbolMid - 245)
 	notGlyph        null 0x2262 'ident'
 	notGlyph        null 0x226D 'equivalentTo'
 	notGlyph        null 0x22AC 'vdash'
