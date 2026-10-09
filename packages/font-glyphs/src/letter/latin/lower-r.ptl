@@ -208,6 +208,9 @@ glyph-block Letter-Latin-Lower-R : begin
 			include : setMarks doTS XH 0
 
 			include : F df mode doTS doBS
+			# Berkeley Mono: set further right.
+			include : ApparentTranslate 16 0
+
 
 		create-glyph "rLongLeg.\(suffix)" : glyph-proc
 			set-width df.width
