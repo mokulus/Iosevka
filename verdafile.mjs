@@ -654,6 +654,14 @@ const DistWoff2 = file.make(
 //////              Font Distribution                //////
 ///////////////////////////////////////////////////////////
 
+// Single-file entry point, e.g. `single::IoskeleyMono-Regular`
+const _Entry_SingleUnhintedTTF = task.group("single", async (target, fn) => {
+	const [{ fileNameToBpMap }] = await target.need(BuildPlans);
+	const fi = fileNameToBpMap[fn];
+	if (!fi) fail(`Build plan for '${fn}' not found.`);
+	await target.need(DistUnhintedTTF(fi.prefix, fn));
+});
+
 // Group-level entry points
 const _Entry_GroupContents = task.group("contents", async (target, gr) => {
 	await target.need(Entry_GroupFonts(gr), Entry_GroupUnhintedFonts(gr));
