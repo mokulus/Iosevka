@@ -172,8 +172,10 @@ glyph-block Symbol-Punctuation-Small : begin
 
 	foreach { suffix { DrawAt kDotRadius overshoot } } [Object.entries DotVariants] : do
 		create-glyph "colon.\(suffix)" : glyph-proc
+			# Berkeley Mono: both dots raised, the lower one more.
 			include [refer-glyph "period.\(suffix)"] AS_BASE ALSO_METRICS
-			include [refer-glyph "xhPeriod.\(suffix)"]
+			include : ApparentTranslate 0 72
+			include : with-transform [ApparentTranslate 0 23] : refer-glyph "xhPeriod.\(suffix)"
 
 			create-forked-glyph "colon/mid.\(suffix)" : glyph-proc
 				include : ApparentTranslate 0 (SymbolMid - XH / 2)
@@ -197,8 +199,10 @@ glyph-block Symbol-Punctuation-Small : begin
 			include : DrawAt df.middle (CAP - [mix dr (XH - dr) (1 - k)]) (dr - overshoot)
 
 		create-glyph "semicolon.\(suffix)" : glyph-proc
+			# Berkeley Mono: comma raised, dot lowered.
 			include [refer-glyph "comma.\(suffix)"] AS_BASE ALSO_METRICS
-			include [refer-glyph "xhPeriod.\(suffix)"]
+			include : ApparentTranslate 0 70
+			include : with-transform [ApparentTranslate 0 (-20)] : refer-glyph "xhPeriod.\(suffix)"
 
 		create-glyph "revSemicolon.\(suffix)" : glyph-proc
 			include [refer-glyph "revComma.\(suffix)"] AS_BASE ALSO_METRICS
