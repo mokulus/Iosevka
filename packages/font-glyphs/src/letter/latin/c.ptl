@@ -182,6 +182,11 @@ glyph-block Letter-Latin-C : begin
 				ada -- SmallArchDepthA
 				adb -- SmallArchDepthB
 			include : lf.full
+			# Berkeley Mono: width and position.
+			include : Translate (-Middle) 0
+			include : Scale 0.95 1
+			include : Translate (Middle + (12.0)) 0
+
 
 		create-glyph "c/centKernelStd.\(suffix)" : glyph-proc
 			set-width 0
