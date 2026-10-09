@@ -11,6 +11,7 @@ glyph-block Mark-Below : begin
 
 	glyph-block-import Mark-Shared-Metrics : markExtend markStroke markStress markFine
 	glyph-block-import Mark-Shared-Metrics : markMiddle markDotsRadius
+	glyph-block-import Mark-Above : RingShape
 
 	glyph-block-export belowMarkBot belowMarkTop belowMarkMid belowMarkStack
 	define belowMarkBot   (0 - AccentClearance - AccentHeight)
@@ -45,17 +46,18 @@ glyph-block Mark-Below : begin
 	define [CedillaShape ext] : begin
 		local fine : Math.min (0.75 * (belowMarkTop - belowMarkBot - markStroke)) : AdviceStroke 6
 		local cedillaTop : belowMarkTop + 0.875 * fine
-		local cedillaBot   belowMarkBot
+		local cedillaBot : belowMarkBot + 15
+		local cedExt : 0.7 * markExtend
 		return : union
 			VBar.m markMiddle ext (cedillaTop - fine) markStroke
 			dispiro
 				flat (markMiddle - [HSwToV : 0.5 * markStroke]) cedillaTop [widths.rhs.heading fine Rightward]
 				curl markMiddle cedillaTop [heading Rightward]
 				archv
-				g4   (markMiddle + markExtend - O) [mix cedillaTop cedillaBot 0.5] [widths.rhs.heading [mix fine markStroke 0.5] {.x HVContrast .y ((-0.5) * (markStroke - fine) / markStroke)}]
+				g4   (markMiddle + cedExt - O) [mix cedillaTop cedillaBot 0.5] [widths.rhs.heading [mix fine markStroke 0.5] {.x HVContrast .y ((-0.5) * (markStroke - fine) / markStroke)}]
 				arcvh
 				flat markMiddle cedillaBot [widths.rhs.heading markStroke Leftward]
-				curl (markMiddle - markExtend) cedillaBot [heading Leftward]
+				curl (markMiddle - cedExt) cedillaBot [heading Leftward]
 
 	create-glyph 'cedillaExtShapeBelow' : glyph-proc
 		set-width 0
@@ -139,7 +141,11 @@ glyph-block Mark-Below : begin
 	TurnAboveMarkToBelow 'minusBelow'              0x320  'minusAbove'
 	TurnAboveMarkToBelow 'dotBelow'                0x323  'dotAbove'
 	TurnAboveMarkToBelow 'dieresisBelow'           0x324  'dieresisAbove'
-	TurnAboveMarkToBelow 'ringBelow'               0x325  'ringAbove'
+	# Ring below keeps the original ring geometry; the ring above is tuned separately.
+	create-glyph 'ringBelow' 0x325 : glyph-proc
+		set-width 0
+		include : StdAnchors.medium
+		include : RingShape markMiddle belowMarkMid
 	TurnAboveMarkToBelow 'commaBelow'              0x326  'turnCommaAbove'
 	TurnAboveMarkToBelow 'ogonekBelow'             0x328  'ogonekAbove'
 	TurnAboveMarkToBelow 'barBelow'                0x329  'barAbove'
