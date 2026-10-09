@@ -1763,7 +1763,7 @@ const VlShapeWidth = {
 	},
 };
 const VlMenuWidth = { validate: x => x >= 1 && x <= 9 && x % 1 === 0 };
-const VlSlopeAngle = { validate: x => x >= 0 && x <= 15 };
+const VlSlopeAngle = { validate: x => x >= 0 && x <= 20 };
 
 function sValidate(key, v, validator) {
 	if (validator.fixup) v = validator.fix(v);

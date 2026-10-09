@@ -6,3 +6,9 @@ slopeAngle = -15
 
 [shapeSlopeAngle.blend.15]
 slopeAngle = 15
+
+[shapeSlopeAngle.blend.-20]
+slopeAngle = -20
+
+[shapeSlopeAngle.blend.20]
+slopeAngle = 20
