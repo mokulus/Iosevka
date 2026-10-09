@@ -152,24 +152,29 @@ glyph-block Symbol-Punctuation-Percentages : begin
 		local pTerm : fine / (2 * [Math.hypot CAP (r - l)])
 		local pFine : 0.5 - HalfStroke / [Math.hypot CAP (r - l)]
 
-		local otop : CAP / 2 - [Math.max (CAP / 5) (fine * 2)] / 2
+		# Berkeley Mono: shorter rings, a steep slash into the top-right corner,
+		# and a lower pair shifted right.
+		local otop : CAP / 2 - [Math.max (CAP / 5) (fine * 2)] / 2 - 51
 		local coOtop : CAP - otop
 
-		include : OShape CAP (CAP - otop) l m sw ada adb
+		include : OShape CAP (CAP - otop) (l - 13) (m - 42) (0.85 * sw) ada adb
 
-		include : dispiro
-			flat l [mix otop coOtop 0.3] [widths.center fine]
-			curl r (CAP - otop)          [widths.center sw]
+		include : intersection
+			MaskBelow CAP
+			MaskAbove (otop - 18)
+			dispiro
+				flat (l - 7) (otop - 23) [widths.center fine]
+				curl (r - 5) (CAP + 20)   [widths.center sw]
 
 		# bottom row
 		create-forked-glyph 'permille.NWID.ringsContinuousSlash' : glyph-proc
-			local l1   : l - O
-			local r2   r
-			local gap  : (SB / 2 - O * 2) * para.advanceScaleM
+			local l1   : l - O + 49
+			local r2   : r + 32
+			local gap  : 0.5 * (SB / 2 - O * 2) * para.advanceScaleM
 			local fill : ((r2 - l1) - gap) / 2
 			local r1 : l1 + fill
 			local l2 : r1 + gap
-			local swp : AdviceStroke2 4 5 CAP para.advanceScaleM
+			local swp : 0.85 * [AdviceStroke2 4 5 CAP para.advanceScaleM]
 			include : OShape otop  0  l1 r1 swp ada adb
 			include : OShape otop  0  l2 r2 swp ada adb
 
