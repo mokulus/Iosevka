@@ -291,9 +291,9 @@ glyph-block Mark-Above : begin
 	create-glyph 'asciiCaret.high' : glyph-proc
 		include : CaretShape
 			xMiddle -- Middle
-			width   -- (2 * (markExtend * 1.5) * asciiMarkZoomX - QuarterStroke)
+			width   -- (0.75 * (2 * (markExtend * 1.5) * asciiMarkZoomX - QuarterStroke))
 			top     -- ([mix aboveMarkMid aboveMarkTop asciiMarkZoomY] + HalfStroke)
-			bottom  -- [mix aboveMarkMid aboveMarkBot asciiMarkZoomY]
+			bottom  -- [mix aboveMarkMid aboveMarkBot (0.3 * asciiMarkZoomY)]
 			swEnd   -- (Stroke * 1.05)
 			swMid   -- ([StrokeWidthBlend 1.25 1] * Stroke)
 
