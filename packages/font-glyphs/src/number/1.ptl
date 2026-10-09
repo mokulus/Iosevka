@@ -20,6 +20,20 @@ glyph-block Digits-One : begin
 				flat (Middle - [HSwToV HalfStroke] + balance) top [widths.lhs topSW]
 				curl (Middle - [HSwToV : Stroke / 8] - HookX * 1.25 + balance) (top - Stroke / 8 - Hook * pTopSerif * (top / CAP))
 
+		# Berkeley Mono: stem set further right, flag ending in a vertical cut at a fixed x.
+		export : define [SerifedVCut top balance pTopSerif] : glyph-proc
+			define topSW : AdviceStroke 3.5
+			define xStem : Middle + balance + 33
+			define xEnd : SB + 22
+			define x0 : xStem - [HSwToV HalfStroke]
+			define y1 : top - (Stroke / 8 + Hook * pTopSerif * (top / CAP)) * 1.05
+			include : VBar.m xStem 0 top
+			include : intersection
+				MaskRight xEnd
+				dispiro
+					flat x0 top [widths.lhs topSW]
+					curl (xEnd - 0.25 * (x0 - xEnd)) (y1 - 0.25 * (top - y1))
+
 		export : define [FlatSerifed top balance pTopSerif] : glyph-proc
 			define topSW : AdviceStroke 3.5
 			include : VBar.m (Middle + balance) 0 top
@@ -38,7 +52,7 @@ glyph-block Digits-One : begin
 
 	define OneConfig : object
 		line               { Shape.Line         null        0.75   0 }
-		noBase             { Shape.Serifed      null        0.75   1 }
+		noBase             { Shape.SerifedVCut  null        0.75   1 }
 		base               { Shape.Serifed      Shape.Base  0.75   1 }
 		noBaseLongTopSerif { Shape.Serifed      null        1.875  1 }
 		baseLongTopSerif   { Shape.Serifed      Shape.Base  1.875  1 }
