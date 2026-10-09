@@ -233,7 +233,7 @@ glyph-block Symbol-Punctuation-Quotes-And-Primes : begin
 
 	create-glyph 'asciiDoubleQuote' 0x22 : glyph-proc
 		local dfSingle : DivFrame para.advanceScaleI
-		local dist : 0.2 * Width
+		local dist : 0.16 * Width
 		include : refer-glyph "asciiSingleQuote/body/straight"
 		include : Translate (dist * (-2)) 0
 		include : refer-glyph "asciiSingleQuote/body/straight"
