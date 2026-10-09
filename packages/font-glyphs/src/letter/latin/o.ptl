@@ -17,7 +17,8 @@ glyph-block Letter-Latin-O : begin
 
 	create-glyph 'O' 'O' : glyph-proc
 		include : MarkSet.capital
-		include : OShape CAP 0 SB RightSB nothing ArchDepthA ArchDepthB
+		# Berkeley Mono: a slightly wider O.
+		include : OShape CAP 0 (SB - 9) (RightSB + 9) nothing ArchDepthA ArchDepthB
 
 	create-glyph 'smcpO' 0x1D0F : glyph-proc
 		include : MarkSet.e
@@ -89,18 +90,20 @@ glyph-block Letter-Latin-O : begin
 	create-glyph 'OSlash' 0xD8 : glyph-proc
 		local fine : 0.5 * OverlayStroke
 		include [refer-glyph 'O'] AS_BASE
+		# Berkeley Mono: a shallow slash reaching past the bowl sideways.
 		include : dispiro
 			widths.center (2 * fine)
-			flat (SB      + O + fine) [mix CAP 0 1.05]
-			curl (RightSB - O - fine) [mix 0 CAP 1.05]
+			flat (SB      - 48) (CAP * 0.1)
+			curl (RightSB + 48) (CAP * (1 - 0.1))
 
 	create-glyph 'oSlash' 0xF8 : glyph-proc
 		local fine : 0.5 * OverlayStroke
 		include [refer-glyph 'o'] AS_BASE
+		# Berkeley Mono: a slash that stays within the bowl's height.
 		include : dispiro
 			widths.center (2 * fine)
-			flat (SB      + O + fine) [mix XH 0 1.05]
-			curl (RightSB - O - fine) [mix 0 XH 1.05]
+			flat SB      (XH * 0.02)
+			curl RightSB (XH * (1 - 0.02))
 
 	create-glyph 'oSideways' 0x1D11 : glyph-proc
 		include : MarkSet.e
