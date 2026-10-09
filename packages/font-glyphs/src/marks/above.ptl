@@ -853,7 +853,8 @@ glyph-block Mark-Above : begin
 			corner xr yJ
 		include : ApparentTranslate 0 (DotRadius * 0.3)
 
-	select-variant 'commaAbove' 0x313 (follow -- 'diacriticDot')
+	# Comma marks follow the punctuation-dot style (Berkeley Mono pairs round diacritic dots with wedge commas).
+	select-variant 'commaAbove' 0x313 (follow -- 'punctuationDot')
 	select-variant 'commaAbove/asPunctuation' (shapeFrom -- 'commaAbove') (follow -- 'punctuationDot')
 
 	derive-composites 'commaAboveZero.round'  null 'commaAbove.round'  [ApparentTranslate (-markMiddle) ((-aboveMarkTop) + commaAboveRadius)]

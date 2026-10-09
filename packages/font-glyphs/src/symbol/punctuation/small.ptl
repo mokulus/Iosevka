@@ -156,8 +156,8 @@ glyph-block Symbol-Punctuation-Small : begin
 	select-variant 'comma' ',' (follow -- 'punctuationDot')
 	select-variant 'revComma' 0x2E41 (follow -- 'punctuationDot')
 
-	select-variant 'comma/asDiacritic' (follow -- 'diacriticDot')
-	select-variant 'revComma/asDiacritic' (follow -- 'diacriticDot')
+	select-variant 'comma/asDiacritic' (follow -- 'punctuationDot')
+	select-variant 'revComma/asDiacritic' (follow -- 'punctuationDot')
 
 	turned "turnComma.round"  null "comma.round"  [DivFrame para.advanceScaleI].middle PeriodRadius
 	turned "turnComma.square" null "comma.square" [DivFrame para.advanceScaleI].middle (PeriodRadius * DesignParameters.squareDotScalar)
