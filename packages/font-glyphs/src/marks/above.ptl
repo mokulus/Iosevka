@@ -467,12 +467,14 @@ glyph-block Mark-Above : begin
 			hs       -- markHalfStroke
 
 	create-glyph 'asciiTilde.high' : glyph-proc
+		# Berkeley Mono: flatter wave, sitting higher.
 		include : TildeShape
-			ttop     -- [mix aboveMarkMid aboveMarkTop asciiMarkZoomY]
-			tbot     -- [mix aboveMarkMid (aboveMarkBot + markFine / 2) asciiMarkZoomY]
+			ttop     -- [mix aboveMarkMid aboveMarkTop (0.6 * asciiMarkZoomY)]
+			tbot     -- [mix aboveMarkMid (aboveMarkBot + markFine / 2) (0.6 * asciiMarkZoomY)]
 			leftEnd  -- SB
 			rightEnd -- RightSB
 			hs       -- (OperatorStroke / 2)
+		include : Translate 0 40
 
 	for-width-kinds WideWidth1
 		define emDashWidth : if (para.isQuasiProportional && MosaicWidthScalar > 1) UPM MosaicWidth
