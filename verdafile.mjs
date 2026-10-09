@@ -592,11 +592,14 @@ const DistScopedTTF = file.make(
 	},
 );
 
-// The dependency closure of a scoped build stays valid while the glyph code and the
-// variant selection are unchanged; metric parameters do not change which blocks run.
+// The dependency closure of a scoped build stays valid while the glyph code, the variant
+// selection and the categorical shape (serifs, spacing, slope kind) are unchanged. Numeric
+// weight, width and slant only move outlines; keying on them would force a full-font run
+// for every new value tried. `match verify` cross-checks scoped against full builds.
 function scopeKey(fi) {
 	const hash = createHash("sha1");
-	hash.update(JSON.stringify([fi.shape, fi.variants, fi.derivingVariants]));
+	const { serifs, spacing, slope } = fi.shape;
+	hash.update(JSON.stringify([serifs, spacing, slope, fi.variants, fi.derivingVariants]));
 	for (const dir of FS.readdirSync(PACKAGES).sort()) {
 		for (const sub of ["src", "lib"]) {
 			const root = Path.join(PACKAGES, dir, sub);
