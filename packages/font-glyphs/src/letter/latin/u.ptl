@@ -160,6 +160,11 @@ glyph-block Letter-Latin-U : begin
 			include : MarkSet.capital
 			include : Base  df CAP Stroke
 			include : Slabs df CAP Stroke
+			# Berkeley Mono: width and position.
+			include : Translate (-Middle) 0
+			include : Scale 1.03 1
+			include : Translate (Middle + (0.0)) 0
+
 
 		create-glyph "U/withTonos.\(suffix)" : glyph-proc
 			include [refer-glyph "U.\(suffix)"] AS_BASE ALSO_METRICS
@@ -197,6 +202,11 @@ glyph-block Letter-Latin-U : begin
 			include : df.markSet.e
 			include : Base  df XH Stroke
 			include : Slabs df XH Stroke
+			# Berkeley Mono: width and position.
+			include : Translate (-Middle) 0
+			include : Scale 0.975 1
+			include : Translate (Middle + (0.0)) 0
+
 
 		create-glyph "grek/mu.\(suffix)" : glyph-proc
 			local df : include : DivFrame 1
