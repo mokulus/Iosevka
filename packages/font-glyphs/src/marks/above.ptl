@@ -16,7 +16,7 @@ glyph-block Mark-Above : begin
 	glyph-block-import Symbol-Arrow-Shared : ArrowDims ArrowT
 
 	glyph-block-import Mark-Shared-Metrics : markExtend markStroke markHalfStroke markStress markFine
-	glyph-block-import Mark-Shared-Metrics : asciiMarkZoomX asciiMarkZoomY
+	glyph-block-import Mark-Shared-Metrics : asciiMarkZoomX asciiMarkZoomY asciiAccentZoomX asciiAccentZoomY
 	glyph-block-import Mark-Shared-Metrics : markMiddle markDotsRadius dialytikaRadius
 
 	glyph-block-export aboveMarkTop aboveMarkBot aboveMarkMid aboveMarkStack
@@ -203,8 +203,8 @@ glyph-block Mark-Above : begin
 	create-glyph 'asciiGrave/body/straight' : glyph-proc
 		local df : include : DivFrame para.advanceScaleSp
 		include : dispiro
-			flat (df.middle + HalfStroke * 1.1 * asciiMarkZoomX * [Math.sqrt df.adws]) [mix aboveMarkMid aboveMarkBot asciiMarkZoomY] [widths.center : Stroke * 0.9]
-			curl (df.middle - markExtend * 1.0 * asciiMarkZoomX * [Math.sqrt df.adws]) [mix aboveMarkMid aboveMarkTop asciiMarkZoomY] [widths.center : Stroke * 1.1]
+			flat (df.middle + HalfStroke * 1.1 * asciiAccentZoomX * [Math.sqrt df.adws]) [mix aboveMarkMid aboveMarkBot asciiAccentZoomY] [widths.center : Stroke * 0.9]
+			curl (df.middle - markExtend * 1.0 * asciiAccentZoomX * [Math.sqrt df.adws]) [mix aboveMarkMid aboveMarkTop asciiAccentZoomY] [widths.center : Stroke * 1.1]
 
 	create-glyph 'doubleGraveAbove' 0x30F : glyph-proc
 		set-width 0
@@ -231,8 +231,8 @@ glyph-block Mark-Above : begin
 	create-glyph 'latin1acute' 0xB4 : glyph-proc
 		local df : include : DivFrame para.advanceScaleSp
 		include : dispiro
-			flat (df.middle - HalfStroke * 1.1 * asciiMarkZoomX * [Math.sqrt df.adws]) [mix aboveMarkMid aboveMarkBot asciiMarkZoomY] [widths.center : Stroke * 0.9]
-			curl (df.middle + markExtend * 1.0 * asciiMarkZoomX * [Math.sqrt df.adws]) [mix aboveMarkMid aboveMarkTop asciiMarkZoomY] [widths.center : Stroke * 1.1]
+			flat (df.middle - HalfStroke * 1.1 * asciiAccentZoomX * [Math.sqrt df.adws]) [mix aboveMarkMid aboveMarkBot asciiAccentZoomY] [widths.center : Stroke * 0.9]
+			curl (df.middle + markExtend * 1.0 * asciiAccentZoomX * [Math.sqrt df.adws]) [mix aboveMarkMid aboveMarkTop asciiAccentZoomY] [widths.center : Stroke * 1.1]
 
 	create-glyph 'doubleAcuteAbove' 0x30B : glyph-proc
 		set-width 0

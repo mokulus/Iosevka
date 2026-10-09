@@ -21,6 +21,11 @@ glyph-block Mark-Shared-Metrics : begin
 	define asciiMarkZoomX : (RightSB - SB) / (markExtend * 3)
 	define asciiMarkZoomY : 1.25 * asciiMarkZoomX
 
+	# Spacing grave and acute (U+0060, U+00B4) use a smaller zoom than the ASCII caret and tilde.
+	glyph-block-export asciiAccentZoomX asciiAccentZoomY
+	define asciiAccentZoomX : 0.3 * asciiMarkZoomX
+	define asciiAccentZoomY : 2.0 * asciiAccentZoomX
+
 	glyph-block-export markMiddle markDotsRadius dialytikaRadius
 	define markMiddle (-Middle)
 	define markDotsRadius : DotRadius * [Math.min 1 (markStress / HalfStroke)]
