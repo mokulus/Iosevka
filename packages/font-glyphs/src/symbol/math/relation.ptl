@@ -483,8 +483,12 @@ glyph-block Symbol-Math-Relation-Inequality : begin
 			GreaterMaskShape top bot l r
 			HBar.m l r [mix top bot 0.5] [fallback s OperatorStroke]
 
+	# Berkeley Mono: smaller < and >, arm ends cut vertically.
+	define lgH : dH - 80
 	create-glyph 'less' '<' : glyph-proc
-		include : LessShape (SymbolMid + dH) (SymbolMid - dH) SB RightSB
+		include : intersection
+			LessShape (SymbolMid + lgH) (SymbolMid - lgH) (SB + 30) (RightSB - 20)
+			MaskLeft (RightSB - 20 - 0)
 
 	WithDotVariants 'lessDot' 0x22D6 : function [DrawAt kr ov] : composite-proc
 		LessShape (SymbolMid + dH) (SymbolMid - dH) SB RightSB [AdviceStroke 4]
@@ -511,7 +515,9 @@ glyph-block Symbol-Math-Relation-Inequality : begin
 		include : SmallerShape (SymbolMid + dH) (SymbolMid - dH) SB RightSB
 
 	create-glyph 'greater' '>' : glyph-proc
-		include : GreaterShape (SymbolMid + dH) (SymbolMid - dH) SB RightSB
+		include : intersection
+			GreaterShape (SymbolMid + lgH) (SymbolMid - lgH) (SB + 20) (RightSB - 30)
+			MaskRight (SB + 20 + 0)
 
 	WithDotVariants 'greaterDot' 0x22D7 : function [DrawAt kr ov] : composite-proc
 		GreaterShape (SymbolMid + dH) (SymbolMid - dH) SB RightSB [AdviceStroke 4]
