@@ -114,6 +114,8 @@ export : define [buildGlyphs para recursive] : begin
 		run-glyph-module "./auto-build/accents.mjs"
 		if [not process.env.IOSKELEY_FAST] : run-glyph-module "./auto-build/transformed.mjs"
 		if [not process.env.IOSKELEY_FAST] : run-glyph-module "./auto-build/composite.mjs"
+	# Scoped builds (recursive filter + IOSKELEY_SCOPED) still compose accented letters.
+	if (recursive && process.env.IOSKELEY_SCOPED) : run-glyph-module "./auto-build/accents.mjs"
 
 	$Exec$.executePendingBlocks
 

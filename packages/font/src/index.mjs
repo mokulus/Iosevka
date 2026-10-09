@@ -10,8 +10,10 @@ import { getParametersT } from "./param/index.mjs";
 
 export default main;
 async function main(argv) {
-	// Fast iteration builds skip derived glyphs; each font builds in its own process.
+	// Iteration builds skip derived glyphs; scoped builds also run a filtered glyph set.
+	// Each font builds in its own process, so the environment is per font.
 	if (argv.fast) process.env.IOSKELEY_FAST = "1";
+	if (argv.scope) process.env.IOSKELEY_SCOPED = "1";
 	// Set up parameters
 	const paraT = await getParametersT(argv);
 	const para = paraT(argv);

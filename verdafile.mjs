@@ -547,9 +547,25 @@ const DistUnhintedTTF = file.make(
 	},
 );
 
-// Iteration build for outline comparison: only printable ASCII and the glyphs it depends
+// Iteration build for outline comparison: the code points below and the glyphs they depend
 // on, no derived glyphs and no OpenType features. Not for release.
-const SCOPED_CODEPOINTS = Array.from({ length: 0x7f - 0x20 }, (_, i) => 0x20 + i);
+const SCOPED_RANGES = [
+	[0x20, 0x7e], // Basic Latin
+	[0xa0, 0x2af], // Latin-1 Supplement, Latin Extended-A/B, IPA
+	[0x2b0, 0x2ff], // Spacing modifiers (accents)
+	[0x1e00, 0x1eff], // Latin Extended Additional
+	[0x2010, 0x205e], // General punctuation
+	[0x20a0, 0x20cf], // Currency
+	[0x2100, 0x214f], // Letterlike
+	[0x2190, 0x21ff], // Arrows
+	[0x2200, 0x22ff], // Math operators
+	[0x2500, 0x25ff], // Box drawing, blocks, geometric shapes
+	[0xe0a0, 0xe0b3], // Powerline
+	[0xfffd, 0xfffd],
+];
+const SCOPED_CODEPOINTS = SCOPED_RANGES.flatMap(([a, b]) =>
+	Array.from({ length: b - a + 1 }, (_, i) => a + i),
+);
 const DistScopedTTF = file.make(
 	(gr, fn) => `${DIST}/${gr}/TTF-Scoped/${fn}.ttf`,
 	async (target, out, gr, fn) => {
@@ -599,7 +615,7 @@ const DistScopedTTF = file.make(
 function scopeKey(fi) {
 	const hash = createHash("sha1");
 	const { serifs, spacing, slope } = fi.shape;
-	hash.update(JSON.stringify([serifs, spacing, slope, fi.variants, fi.derivingVariants]));
+	hash.update(JSON.stringify([SCOPED_RANGES, serifs, spacing, slope, fi.variants, fi.derivingVariants]));
 	for (const dir of FS.readdirSync(PACKAGES).sort()) {
 		for (const sub of ["src", "lib"]) {
 			const root = Path.join(PACKAGES, dir, sub);

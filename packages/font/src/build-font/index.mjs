@@ -74,29 +74,32 @@ function getCharMap(glyphStore) {
 
 // Scoped build: run only the glyph blocks the target code points depend on.
 // The dependency closure comes from a previous full run and is stored at scope.path,
-// tagged with scope.key (a hash of the glyph code and variant selection). A stale or
-// missing closure, or a scoped run that fails to produce every target, falls back to
-// a full run, which records a fresh closure.
+// tagged with scope.key (a hash of the glyph code and variant selection), together with
+// the code points that run produced. A stale or missing closure, or a scoped run that
+// misses any of those code points, falls back to a full run, which records a fresh closure.
 function buildScopedGlyphs(para, scope) {
 	const saved = readScope(scope);
 	if (saved) {
 		const filter = new RecursiveBuildFilter(new Set(saved.glyphs), new Set(saved.blocks));
 		try {
 			const result = buildGlyphs(para, filter);
-			if (scope.codepoints.every(u => result.glyphStore.queryByUnicode(u))) return result;
-			console.error("Scoped build missed target glyphs; rebuilding the dependency closure.");
+			const missing = saved.codepoints.filter(u => !result.glyphStore.queryByUnicode(u));
+			if (!missing.length) return result;
+			console.error(`Scoped build missed ${missing.length} code points; rebuilding the dependency closure.`);
 		} catch (e) {
 			console.error(`Scoped build failed (${e.message}); rebuilding the dependency closure.`);
 		}
 	}
 
 	const result = buildGlyphs(para);
-	const targets = scope.codepoints.map(u => result.glyphStore.queryByUnicode(u)).filter(g => g);
+	const codepoints = scope.codepoints.filter(u => result.glyphStore.queryByUnicode(u));
+	const targets = codepoints.map(u => result.glyphStore.queryByUnicode(u));
 	const filter = targets[0]._m_dependencyManager.traverseDependencies(targets);
 	fs.writeFileSync(
 		scope.path,
 		JSON.stringify({
 			key: scope.key,
+			codepoints,
 			glyphs: [...filter.glyphIdFilter],
 			blocks: [...filter.blockIdFilter],
 		}),
