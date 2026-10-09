@@ -170,7 +170,10 @@ glyph-block Symbol-Punctuation-Brackets : begin
 				VBar.l hDim.l bottom top
 
 	do "Bracket Glyphs"
-		create-glyph 'bracketLeft' '[' : Bracket.Shape ParenTop ParenBot
+		create-glyph 'bracketLeft' '[' : glyph-proc
+			# Berkeley Mono: narrower and slightly taller.
+			local hDim : Bracket.HDim
+			include : Bracket.Shape (ParenTop + 11) (ParenBot - 11) (hDim.l + 82) 9
 		create-glyph 'bracketLeftUHalf' 0x2E22 : intersection
 			refer-glyph 'bracketLeft'
 			MaskAbove SymbolMid
@@ -408,7 +411,9 @@ glyph-block Symbol-Punctuation-Brackets : begin
 				curlyFlatBoundary { 0.25 0.05 }
 
 			foreach { suffix { pFlatIn pFlatOut } } [Object.entries CurlyBraceConfig] : do
-				create-glyph "braceLeft.\(suffix)" : Brace.CurlyShape Stroke pFlatIn pFlatOut
+				# Berkeley Mono: a narrower brace.
+				define BraceNarrow : BraceT { .braceInside 0.91 .braceOutside 0.15 }
+				create-glyph "braceLeft.\(suffix)" : BraceNarrow.CurlyShape Stroke pFlatIn pFlatOut
 				turned "braceRight.\(suffix)" null "braceLeft.\(suffix)" Middle SymbolMid
 
 				create-glyph "ligExtBraceLeft.\(suffix)" : glyph-proc
