@@ -10,7 +10,7 @@ glyph-block Digits-Seven : begin
 	glyph-block-import Common-Derivatives
 	glyph-block-import Digits-Shared : OnumMarks ShiftDown CodeLnum CodeOnum
 
-	define SevenXLeft : mix SB RightSB 0.28
+	define SevenXLeft : mix SB RightSB 0.18
 	define [StraightBody top] : union [HBar.t SB RightSB top] : intersection
 		Rect (top - Stroke) 0 SB RightSB
 		dispiro
@@ -42,11 +42,11 @@ glyph-block Digits-Seven : begin
 	define [StartSerifThick top] : VSerif.dl (SB + (OX - O)) top VJut [AdviceStroke 2.75]
 
 	define [Crossbar top] : glyph-proc
-		local m : mix SevenXLeft (RightSB - [HSwToV HalfStroke]) 0.5
+		local m : [mix SevenXLeft (RightSB - [HSwToV HalfStroke]) 0.5] + 0.08 * (RightSB - SB)
 		include : HBar.m
-			m - [HSwToV QuarterStroke] - LongJut * 0.8
+			m - [HSwToV QuarterStroke] - LongJut * 0.8 - 0.03 * (RightSB - SB)
 			m + [HSwToV QuarterStroke] + LongJut * 0.7
-			mix 0 (top - QuarterStroke) 0.5
+			[mix 0 (top - QuarterStroke) 0.5] - 0.01 * top
 
 	define [BendCrossbar top] : glyph-proc
 		local m : [mix SevenXLeftBend (RightSB - [HSwToV HalfStroke]) 0.25] + 0.125 * Stroke
