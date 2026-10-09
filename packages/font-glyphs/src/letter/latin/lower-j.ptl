@@ -36,6 +36,8 @@ glyph-block Letter-Latin-Lower-J : begin
 
 	define dfNarrowJ : DivFrame para.advanceScaleF
 
+	# Berkeley Mono: the flat-hook serifed j sits further left; its top serif keeps its left end.
+	define jFlatHookSerifedShift 30
 	define XMiddleT : namespace
 		export : define [StraightSerifless df] : df.middle + 0
 		export : define [StraightSerifed   df] : df.middle + [IBalance2 df]
@@ -43,7 +45,7 @@ glyph-block Letter-Latin-Lower-J : begin
 		export : define [NarrowBentHook    df] : df.middle + JBalance
 		export : define [DiagonalTailed    df] : df.middle + [IBalance2 df]
 		export : define [FlatHookSerifless df] : df.middle + 0.25 * JBalance * df.adws * [mix 1 df.adws 2]
-		export : define [FlatHookSerifed   df] : df.middle + JBalance * df.adws
+		export : define [FlatHookSerifed   df] : df.middle + JBalance * df.adws - jFlatHookSerifedShift
 
 	define JBody : namespace
 		export : define [BentHook df top xMiddle] : glyph-proc
@@ -94,6 +96,7 @@ glyph-block Letter-Latin-Lower-J : begin
 		export : define [None  df top xMiddle] : tagged 'serifLT' : no-shape
 		export : define [Long  df top xMiddle] : tagged 'serifLT' : HSerif.lt xMiddle top [Math.max Jut : mix [HSwToV HalfStroke] LongJut df.adws]
 		export : define [Short df top xMiddle] : tagged 'serifLT' : HSerif.lt xMiddle top Jut
+		export : define [LongShifted df top xMiddle] : tagged 'serifLT' : HSerif.lt xMiddle top ([Math.max Jut : mix [HSwToV HalfStroke] LongJut df.adws] + jFlatHookSerifedShift)
 
 	define JMarks : namespace
 		export : define [Serifless df top xMiddle] : glyph-proc
@@ -119,7 +122,7 @@ glyph-block Letter-Latin-Lower-J : begin
 		'straightSerifed'            { JBody.Straight        JSerifs.Long   XMiddleT.StraightSerifed    JMarks.Serifed    para.advanceScaleI  }
 		'flatHookSerifless'          { JBody.FlatHook        JSerifs.None   XMiddleT.FlatHookSerifless  JMarks.Serifless  para.advanceScaleII }
 		'flatHookShortSerifed'       { JBody.FlatHook        JSerifs.Short  XMiddleT.FlatHookSerifless  JMarks.Serifless  para.advanceScaleII }
-		'flatHookSerifed'            { JBody.FlatHook        JSerifs.Long   XMiddleT.FlatHookSerifed    JMarks.Serifed    para.advanceScaleI  }
+		'flatHookSerifed'            { JBody.FlatHook        JSerifs.LongShifted XMiddleT.FlatHookSerifed JMarks.Serifed  para.advanceScaleI  }
 
 	foreach { suffix { Body Serifs xMiddleT Marks adws } } [Object.entries JConfig] : do
 		local df : DivFrame adws
