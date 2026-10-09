@@ -13,8 +13,8 @@ glyph-block Symbol-Punctuation-Quotes-And-Primes : begin
 	glyph-block-import Symbol-Punctuation-Small
 	glyph-block-import Letter-Shared : CreateDependentComposite
 
-	define quoteTop    : CAP * 1.05
-	define quoteBottom : XH  * 0.85
+	define quoteTop    : CAP * 1.11
+	define quoteBottom : XH  * 0.88
 
 	define yCurlyQuotes : mix quoteBottom quoteTop 0.5
 	define commaLow : mix 0 Descender 0.9
@@ -67,7 +67,7 @@ glyph-block Symbol-Punctuation-Quotes-And-Primes : begin
 
 	define [DoubleQuoteProc adwsSingle] : function [gn] : glyph-proc
 		local dfSingle : DivFrame adwsSingle
-		local dist : Width * 0.225
+		local dist : Width * 0.16
 		include : refer-glyph gn
 		include : Translate (dist * (-2)) 0
 		include : refer-glyph gn

@@ -74,13 +74,21 @@ glyph-block Symbol-Punctuation-Small : begin
 					g4 ([mix 0 Descender TanSlope] - commaOverflow) Descender [widths.rhs swEnd]
 
 		export : define [square cx cy] : with-transform [Translate cx cy] : glyph-proc
-			include : union
-				SquareAt 0 r r
-				dispiro
-					flat r r [widths.rhs sw]
-					curl r 0 [widths.rhs sw]
-					quadControls (0 + TanSlope / 2) (0.5 - TanSlope * (r / Descender)) 12
-					g4 ([mix 0 Descender TanSlope] - commaOverflow) Descender [widths.rhs swEnd]
+			# Wedge comma: narrow vertical head, straight tail tapering down and left.
+			local s : 2 * r
+			local xr : 1 * (r - 0.0 * s)
+			local xl : xr - 1 * 0.8 * s
+			local yT : 0.92 * s
+			local yJ : 0.3 * s
+			local yB : 0.84 * Descender
+			local xbl : xl - 1 * 0.52 * s
+			include : spiro-outline
+				corner xr yT
+				corner xl yT
+				corner xl yJ
+				corner xbl yB
+				corner xl yB
+				corner xr yJ
 
 	define [RevCommaShape kdr o] : namespace
 		define r : PeriodRadius * kdr
@@ -115,13 +123,21 @@ glyph-block Symbol-Punctuation-Small : begin
 					g4 ([mix 0 Descender TanSlope] + commaOverflow) Descender [widths.lhs swEnd]
 
 		export : define [square cx cy] : with-transform [Translate cx cy] : glyph-proc
-			include : union
-				SquareAt 0 r r
-				dispiro
-					flat (-r) r [widths.lhs sw]
-					curl (-r) 0
-					quadControls (0 - TanSlope / 2) (0.5 - TanSlope * (r / Descender)) 12
-					g4 ([mix 0 Descender TanSlope] + commaOverflow) Descender [widths.lhs swEnd]
+			# Wedge comma: narrow vertical head, straight tail tapering down and right.
+			local s : 2 * r
+			local xr : (-1) * (r - 0.0 * s)
+			local xl : xr - (-1) * 0.8 * s
+			local yT : 0.92 * s
+			local yJ : 0.3 * s
+			local yB : 0.84 * Descender
+			local xbl : xl - (-1) * 0.52 * s
+			include : spiro-outline
+				corner xr yT
+				corner xl yT
+				corner xl yJ
+				corner xbl yB
+				corner xl yB
+				corner xr yJ
 
 	foreach { suffix { DrawAt kDotRadius overshoot } } [Object.entries DotVariants] : do
 		create-glyph "comma.\(suffix)" : glyph-proc
