@@ -178,7 +178,7 @@ glyph-block Letter-Latin-C : begin
 
 		create-glyph "c.\(suffix)" : glyph-proc
 			include : MarkSet.e
-			local lf : CLetterForm [DivFrame 1] sty styBot XH 0
+			local lf : CLetterForm [DivFrame 1] sty styBot XH 0 (hook -- Hook * 0.85)
 				ada -- SmallArchDepthA
 				adb -- SmallArchDepthB
 			include : lf.full
@@ -191,7 +191,7 @@ glyph-block Letter-Latin-C : begin
 		create-glyph "c/centKernelStd.\(suffix)" : glyph-proc
 			set-width 0
 			set-mark-anchor 'cvDecompose' Middle (XH / 2)
-			local lf : CLetterForm [DivFrame 1] sty styBot XH 0
+			local lf : CLetterForm [DivFrame 1] sty styBot XH 0 (hook -- Hook * 0.85)
 				ada -- SmallArchDepthA
 				adb -- SmallArchDepthB
 			include : lf.full
