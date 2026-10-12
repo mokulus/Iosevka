@@ -257,6 +257,11 @@ glyph-block Letter-Latin-Lower-M : begin
 			local df : include : dfM
 			include : df.markSet.e
 			include : mShapeBody df XH
+			# Berkeley Mono: width and position.
+			include : Translate (-Middle) 0
+			include : Scale 1.07 1
+			include : Translate (Middle + (0.0)) 0
+
 
 		if (!tailed) : begin
 			create-glyph "meng.\(suffix)" : glyph-proc
