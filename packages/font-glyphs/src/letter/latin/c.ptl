@@ -195,6 +195,9 @@ glyph-block Letter-Latin-C : begin
 				ada -- SmallArchDepthA
 				adb -- SmallArchDepthB
 			include : lf.full
+			include : Translate (-Middle) 0
+			include : Scale 0.95 1
+			include : Translate (Middle + (20.0)) 0
 
 		create-glyph "c/centKernelCap.\(suffix)" : glyph-proc
 			set-width 0
@@ -529,12 +532,13 @@ glyph-block Letter-Latin-C : begin
 			through     1
 			interrupted 2
 		object # height
-			""         { 0 XH (Descender / 2) (XH - Descender / 2)   "std" }
+			""         { 0 XH (Descender * 0.4) (XH - Descender * 0.385)   "std" }
 			"cap"      { (CAP / 2 - XH / 2) (CAP / 2 + XH / 2) 0 CAP "cap" }
 
 	foreach { suffix { sl fillType { bMask tMask bot top selector }}} [pairs-of CentConfig] : do
-		define [xBot df] : mix df.leftSB df.rightSB (0.5 - sl)
-		define [xTop df] : mix df.leftSB df.rightSB (0.5 + sl)
+		# Berkeley Mono: the bar sits right of the cell centre.
+		define [xBot df] : [mix df.leftSB df.rightSB (0.5 - sl)] + 14
+		define [xTop df] : [mix df.leftSB df.rightSB (0.5 + sl)] + 14
 
 		define swBarThick : AdviceStroke 3
 		define swBarFine  : AdviceStroke [StrokeWidthBlend 3.0 5.5]
