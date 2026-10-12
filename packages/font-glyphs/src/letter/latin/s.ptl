@@ -220,12 +220,18 @@ glyph-block Letter-Latin-S : begin
 			set-width 0
 			set-mark-anchor 'cvDecompose' df.middle (CAP / 2)
 
-			define top : CAP * 0.95
-			define bot : CAP * 0.05
+			define top : CAP * 0.97
+			define bot : CAP * 0.03
 			local sw : AdviceStroke2 2 3 (top - bot) df.adws
-			include : SStrokeImpl df top bot doTS doBS sw EssUpper
-			include : SAutoSlabStart df doTS top sw Hook
-			include : SAutoSlabEnd   df doBS bot sw Hook
+			local hk : Hook * 0.9
+			include : SStrokeImpl df top bot doTS doBS sw EssUpper hk
+			include : SAutoSlabStart df doTS top sw hk
+			include : SAutoSlabEnd   df doBS bot sw hk
+			# Berkeley Mono: width and position.
+			include : Translate (-Middle) 0
+			include : Scale 1.06 1
+			include : Translate (Middle + (-1.0)) 0
+
 
 		create-glyph "S/dollarKernelCap.\(suffix)" : glyph-proc
 			local df DfCapital
@@ -479,7 +485,7 @@ glyph-block Letter-Latin-S : begin
 			through     1
 			interrupted 2
 		object # height
-			""         { 0.05 0.95 (Descender * 0.4) "std" }
+			""         { 0.03 0.97 (Descender * 0.4) "std" }
 			"cap"      { 0.12 0.88  0              "cap" }
 
 	foreach { suffix { sl fillType { kBot kTop overflow selector } } } [pairs-of DollarConfig] : do
