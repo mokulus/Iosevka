@@ -171,10 +171,20 @@ glyph-block Letter-Latin-C : begin
 			include : LeaningAnchor.Above.VBar.r RightSB
 
 		create-glyph "currency/euroSign.\(suffix)" : glyph-proc
-			include [refer-glyph "C.\(suffix)"] AS_BASE ALSO_METRICS
-			include : union
-				LetterBarOverlay.l SB (CAP * 0.4)
-				LetterBarOverlay.l SB (CAP * 0.6)
+			# Berkeley Mono: the C sits further right; the two bars are thinner, slanted at both ends and reach into the opening.
+			local euroDx 25
+			include : with-transform [ApparentTranslate euroDx 0] : glyph-proc
+				include [refer-glyph "C.\(suffix)"] AS_BASE ALSO_METRICS
+			local barT : OverlayStroke * 0.85
+			local barSlant 15
+			local barLeft 26
+			local barRight 420
+			define [EuroBar yc] : spiro-outline
+				corner barLeft (yc - barT / 2)
+				corner barRight (yc - barT / 2)
+				corner (barRight + barSlant) (yc + barT / 2)
+				corner (barLeft + barSlant) (yc + barT / 2)
+			include : union [EuroBar (CAP * 0.568)] [EuroBar (CAP * 0.376)]
 
 		create-glyph "c.\(suffix)" : glyph-proc
 			include : MarkSet.e
