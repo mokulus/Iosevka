@@ -177,9 +177,25 @@ glyph-block Symbol-Mosaic-Block : begin
 		define FillMedium (1 / 4)
 		define FillHeavy  (1 / 2)
 
+		# Berkeley Mono draws the shades as lattices of square dots (a twelfth of the cell wide)
+		# in staggered columns, not as diagonal stripes.
+		define [DotLattice pitchDots iStart iEnd phaseEven phaseOdd] : glyph-proc
+			local dot : MosaicWidth / 12
+			foreach i [range iStart iEnd] : begin
+				local x : i * pitchDots * dot
+				local phase : if ((i % 2) === 0) phaseEven phaseOdd
+				foreach j [range (-3) 7] : begin
+					local y : phase + 4 * dot * j
+					include : spiro-outline
+						corner x         y
+						corner (x + dot) y
+						corner (x + dot) (y + dot)
+						corner x         (y + dot)
+
 		create-glyph [MangleName 'lightShade'] [MangleUnicode 0x2591] : glyph-proc
 			set-width MosaicWidth
-			include : Shade 4 FillLight
+			include : ForceUpright
+			include : intersection [FillBlock 0 1 0 1] [DotLattice 2 0 6 106 6]
 
 		create-glyph [MangleName 'denseShade'] : glyph-proc
 			set-width MosaicWidth
@@ -198,7 +214,10 @@ glyph-block Symbol-Mosaic-Block : begin
 					FillBlock 0 1 0 1
 					PatternPolygon22 bits
 
-		MediumShade 0x2592  {1 3 9 7}
+		create-glyph [MangleName : NameUni 0x2592] [MangleUnicode 0x2592] : glyph-proc
+			set-width MosaicWidth
+			include : ForceUpright
+			include : intersection [FillBlock 0 1 0 1] [DotLattice 1 0 12 106 6]
 		MediumShade 0x1FB8C {1 2 8 7}
 		MediumShade 0x1FB8D {2 3 9 8}
 		MediumShade 0x1FB8E {1 3 6 4}
@@ -215,7 +234,8 @@ glyph-block Symbol-Mosaic-Block : begin
 
 		create-glyph [MangleName 'heavyShade'] [MangleUnicode 0x2593] : glyph-proc
 			set-width MosaicWidth
-			include : Shade 8 FillHeavy
+			include : ForceUpright
+			include : difference [FillBlock 0 1 0 1] [DotLattice 1 1 11 156 56]
 
 		create-glyph [MangleName 'upperLeftToLowerRightFill'] [MangleUnicode 0x1FB98] : glyph-proc
 			set-width MosaicWidth
