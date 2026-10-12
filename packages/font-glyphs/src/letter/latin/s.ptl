@@ -24,7 +24,7 @@ glyph-block Letter-Latin-S : begin
 	define PHONETIC-RIGHT 11
 
 	define SOTop  0
-	define SOBot  OX
+	define SOBot  : OX * 2
 
 	glyph-block-export AdviceSArchDepth
 	define [AdviceSArchDepth y sign _stroke] : begin
@@ -42,15 +42,16 @@ glyph-block Letter-Latin-S : begin
 			alsoThru.g4 0.5 0.5 [widths.center ess]
 			~~~ [alsoThru 0.5 (0.3 - adjustFactor)]
 
-	define [SStrokeImpl df top bot st sb stroke refSwEss] : begin
+	define [SStrokeImpl df top bot st sb stroke refSwEss _hook] : begin
+		local hook : fallback _hook Hook
 		local ess : refSwEss * (stroke / Stroke)
 		local archDepth : AdviceSArchDepth (top - bot) (-1) stroke
 		return : dispiro
 			match st
-				[Just SLAB-CLASSICAL] : SerifedArcStart.RtlLhs df.rightSB top stroke Hook
-				[Just SLAB-INWARD] : InwardSlabArcStart.RtlLhs df.rightSB top stroke Hook
+				[Just SLAB-CLASSICAL] : SerifedArcStart.RtlLhs df.rightSB top stroke hook
+				[Just SLAB-INWARD] : InwardSlabArcStart.RtlLhs df.rightSB top stroke hook
 				__ : list
-					g4 ((df.rightSB + 0) - SOTop) (top - Hook) [widths.lhs stroke]
+					g4 ((df.rightSB + 0) - SOTop) (top - hook) [widths.lhs stroke]
 					HookStart top (sw -- stroke)
 
 			g4   ((df.leftSB  - 0) + SOTop) (top - archDepth)
@@ -58,11 +59,11 @@ glyph-block Letter-Latin-S : begin
 			g4   ((df.rightSB + 0) - SOBot) (bot + archDepth) [widths.rhs stroke]
 
 			match sb
-				[Just SLAB-CLASSICAL] : SerifedArcEnd.RtlRhs df.leftSB bot stroke Hook
-				[Just SLAB-INWARD] : InwardSlabArcEnd.RtlRhs df.leftSB bot stroke Hook
+				[Just SLAB-CLASSICAL] : SerifedArcEnd.RtlRhs df.leftSB bot stroke hook
+				[Just SLAB-INWARD] : InwardSlabArcEnd.RtlRhs df.leftSB bot stroke hook
 				__ : list
 					HookEnd bot (sw -- stroke)
-					g4 ((df.leftSB - 0) + SOBot) (bot + Hook)
+					g4 ((df.leftSB - 0) + SOBot) (bot + hook)
 
 	define [RevSStrokeImpl df top bot st sb stroke refSwEss] : begin
 		local ess : refSwEss * (stroke / Stroke)
@@ -196,13 +197,14 @@ glyph-block Letter-Latin-S : begin
 			local df : include DfCapital
 			include : df.markSet.capital
 			local sw : AdviceStroke2 2 3 CAP df.adws
-			include : SStrokeImpl df CAP 0 doTS doBS sw EssUpper
-			include : SAutoSlabStart df doTS CAP sw Hook
-			include : SAutoSlabEnd   df doBS 0   sw Hook
+			local hk : Hook * 0.9
+			include : SStrokeImpl df CAP 0 doTS doBS sw EssUpper hk
+			include : SAutoSlabStart df doTS CAP sw hk
+			include : SAutoSlabEnd   df doBS 0   sw hk
 			# Berkeley Mono: width and position.
 			include : Translate (-Middle) 0
-			include : Scale 1.12 1
-			include : Translate (Middle + (2.0)) 0
+			include : Scale 1.10 1
+			include : Translate (Middle + (1.0)) 0
 
 
 		create-glyph "smcpS.\(suffix)" : glyph-proc
