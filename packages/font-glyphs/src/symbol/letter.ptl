@@ -16,15 +16,19 @@ glyph-block Symbol-Currency : begin
 	glyph-block-import Letter-Shared-Shapes : LetterBarOverlay LetterObliqueBarOverlay
 
 	create-glyph 'currency' 0xA4 : glyph-proc
-		local sw : AdviceStroke 3.5
-		local radius : (RightSB - SB) / 2
-		include : OShape (SymbolMid + radius * 0.9) (SymbolMid - radius * 0.9) (Middle - radius * 0.9) (Middle + radius * 0.9) sw
+		# Berkeley Mono: a lowercase o with four ticks on the diagonals through its centre,
+		# the tips reaching the same distance sideways as the o is tall (half its height plus the tick).
+		include [refer-glyph 'o'] AS_BASE ALSO_METRICS
+		local sw Stroke
+		local yMid : XH / 2
+		local tickStart 210
+		local tickEnd 332
 		foreach j [range 0 4] : begin
 			local angle : Math.PI * (j / 2 + 0.25)
 			include : dispiro
 				widths.center sw
-				flat (Middle + radius * 0.87       * [Math.cos angle]) (SymbolMid + radius * 0.87       * [Math.sin angle])
-				curl (Middle + radius * Math.SQRT2 * [Math.cos angle]) (SymbolMid + radius * Math.SQRT2 * [Math.sin angle])
+				flat (Middle + tickStart * [Math.cos angle]) (yMid + tickStart * [Math.sin angle])
+				curl (Middle + tickEnd   * [Math.cos angle]) (yMid + tickEnd   * [Math.sin angle])
 
 	define SterlingConfig : object
 		serifless     { 0 }
