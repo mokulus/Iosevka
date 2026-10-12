@@ -143,7 +143,7 @@ glyph-block Letter-Latin-C : begin
 	foreach { suffix { sty styBot } } [Object.entries CConfig] : do
 		create-glyph "C.\(suffix)" : glyph-proc
 			include : MarkSet.capital
-			local lf : CLetterForm [DivFrame 1] sty styBot CAP 0
+			local lf : CLetterForm [DivFrame 1] sty styBot CAP 0 ArchDepthA ArchDepthB (Hook * 0.9)
 			include : lf.full
 			# Berkeley Mono: the C sits further right in its cell.
 			include : ApparentTranslate 20 0
