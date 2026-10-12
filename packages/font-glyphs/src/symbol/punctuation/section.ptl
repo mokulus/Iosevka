@@ -10,31 +10,36 @@ glyph-block Symbol-Punctuation-Section : begin
 	glyph-block-import Common-Derivatives
 
 	create-glyph 'section' 0xA7 : glyph-proc
-		local top ParenTop
-		local bot ParenBot
-		local ada ArchDepthA
+		# Berkeley Mono: a smaller sign, spanning the cap height down to a fifth of the descender.
+		local top : CAP - 3
+		local bot : Descender * 0.2
+		local lSB : SB + 33
+		local rSB : RightSB - 33
+		local ada : ArchDepthA * 0.9
+		local hk : Hook * 0.65
 		local [s sink offset] : begin
 			local sBot : [mix bot top 0.32] - QuarterStroke
 			return : sink
 				widths.lhs
-				g4 (RightSB - offset) (top - Hook)
+				g4 (rSB - offset) (top - hk)
 				HookStart (top - offset)
-				g4 (SB + offset) (top - ada)
+				g4 (lSB + offset) (top - ada)
 				alsoThru 0.5 0.5 [widths.center Stroke]
-				g4 (RightSB - offset) (sBot + ada) [widths.rhs]
+				g4 (rSB - offset) (sBot + ada) [widths.rhs]
 				arcvh
 				flat [Arch.adjust-x.bot Middle] (sBot + offset + O)
 				[if (sink === dispiro) curl corner] 0 (sBot + offset + O) [heading Leftward]
 				if (sink === dispiro) [list] : list
 					corner 0 [mix bot top 2]
 					corner Width [mix bot top 2]
-					corner Width (top - Hook - TINY)
-					corner RightSB (top - Hook - TINY)
+					corner Width (top - hk - TINY)
+					corner rSB (top - hk - TINY)
+		local mid : mix bot top 0.5
 		define [halfShape] : intersection [s dispiro 0] : union
-			MaskAbove SymbolMid
-			with-transform [FlipAround Middle SymbolMid] : s spiro-outline 0.1
+			MaskAbove mid
+			with-transform [FlipAround Middle mid] : s spiro-outline 0.1
 
 		include : union
 			halfShape
-			with-transform [FlipAround Middle SymbolMid] : halfShape
+			with-transform [FlipAround Middle mid] : halfShape
 
