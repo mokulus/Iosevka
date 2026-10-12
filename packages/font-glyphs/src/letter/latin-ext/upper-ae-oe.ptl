@@ -208,12 +208,15 @@ glyph-block Letter-Latin-Upper-AE-OE : begin
 
 	define [OEShape top df slabKind] : glyph-proc
 		define sw : AEOEStroke df top
-		define eLeft : df.middle - [HSwToV : 0.25 * sw]
+		# Berkeley Mono: the O is wider and the E bars longer, both nearly reaching the cell edges.
+		define xL : df.leftSB - 42
+		define xR : df.rightSB + 56
+		define eLeft : df.middle + 12
 
 		define ada : df.archDepthAOf ArchDepth sw
 		define adb : df.archDepthBOf ArchDepth sw
 
-		local xMidBarRight : df.rightSB - sw / 4
+		local xMidBarRight : xR - sw / 4
 		local yBar : EFMidBarPosY top 0
 		local { jutTop jutBot jutMid } : EFVJutLength top 0 nothing sw
 
@@ -222,21 +225,21 @@ glyph-block Letter-Latin-Upper-AE-OE : begin
 			widths.lhs sw 0
 			straight.left.start eLeft top [heading Leftward]
 			archv
-			flatside.ld df.leftSB 0 top ada adb
+			flatside.ld xL 0 top ada adb
 			arcvh
 			straight.right.end eLeft 0   [heading Rightward]
 
 		# E half
 		include : VBar.l eLeft 0 top sw
-		include : HBar.t (eLeft - O) df.rightSB   top  sw
+		include : HBar.t (eLeft - O) xR   top  sw
 		include : HBar.m (eLeft - O) xMidBarRight yBar sw
-		include : HBar.b (eLeft - O) df.rightSB   0    sw
+		include : HBar.b (eLeft - O) xR   0    sw
 
 		match slabKind
 			([Just SLAB-E-ALL] || [Just SLAB-E-CAPPED]) : begin
-				local swVJut : Math.min (VJutStroke * (sw / Stroke)) : VSwToH : 0.8 * (df.rightSB - (eLeft + [HSwToV sw]))
-				include : VSerif.dr df.rightSB top jutTop swVJut
-				include : VSerif.ur df.rightSB 0   jutBot swVJut
+				local swVJut : Math.min (VJutStroke * (sw / Stroke)) : VSwToH : 0.8 * (xR - (eLeft + [HSwToV sw]))
+				include : VSerif.dr xR top jutTop swVJut
+				include : VSerif.ur xR 0   jutBot swVJut
 		match slabKind
 			[Just SLAB-E-CAPPED] : begin
 				local swVJut : Math.min (VJutStroke * (sw / Stroke)) : VSwToH : 0.8 * (xMidBarRight - (eLeft + [HSwToV sw]))
