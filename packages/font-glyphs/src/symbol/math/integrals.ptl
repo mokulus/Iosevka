@@ -16,7 +16,8 @@ glyph-block Symbol-Math-Integrals : begin
 	define IntHookY : Hook * 0.75
 
 	create-glyph 'integrate' 0x222B : glyph-proc
-		include : LongSShape BgOpTop BgOpBot Hook IntHookY OperatorStroke
+		# Berkeley Mono: the sign is shorter at the bottom.
+		include : LongSShape (BgOpTop + 7) (BgOpBot + 82) (Hook * 1.1) (IntHookY * 1.4) OperatorStroke
 
 	HDual 'doubleIntegrate' 0x222C 'integrate' (0.4 * Width)
 
