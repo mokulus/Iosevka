@@ -55,11 +55,35 @@ glyph-block Symbol-Math-Other : begin
 		include : HBar.m [mix SB 0 0.5] [mix RightSB Width 0.5] SymbolMid OverlayStroke
 
 	create-glyph 'sqrt' 0x221A : glyph-proc
-		include : dispiro
-			widths.center OperatorStroke
-			flat SB [mix ParenBot ParenTop 0.45]
-			curl Middle ParenBot [heading Downward]
-		include : dispiro
-			widths.center OperatorStroke
-			flat Width ParenTop
-			curl Middle ParenBot [heading Downward]
+		# Berkeley Mono: the sign stands on the baseline and ends at the cap height, with a short tick at the left.
+		local sw Stroke
+		local slope 0.32
+		local tickBot 320
+		local tickTop 390
+		local barBot 610
+		local xTickLeft 10
+		local xDownTop 56
+		local xDownBot : xDownTop + slope * tickTop
+		local xUpBot 209
+		local xUpTop : xUpBot + slope * CAP
+		include : union
+			spiro-outline
+				corner xTickLeft tickBot
+				corner (xDownTop + sw) tickBot
+				corner (xDownTop + sw) tickTop
+				corner xTickLeft tickTop
+			spiro-outline
+				corner xDownTop tickTop
+				corner (xDownTop + sw) tickTop
+				corner (xDownBot + sw) 0
+				corner xDownBot 0
+			spiro-outline
+				corner xUpBot 0
+				corner (xUpBot + sw) 0
+				corner (xUpTop + sw) CAP
+				corner xUpTop CAP
+			spiro-outline
+				corner xUpTop barBot
+				corner 590 barBot
+				corner 590 CAP
+				corner xUpTop CAP
